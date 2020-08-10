@@ -1,0 +1,183 @@
+/* ********** Custom Properties ********** */
+:root {
+	--main-font: 'Kulim Park';
+	--alternate-font: sans-serif;
+	--font-size: 16px;
+	--line-height: 1.6;
+
+	--main-color: #0096d9;
+	--main-modal-color: rgba(0, 150, 217, 0.75);
+	--second-color: #171226;
+	--second-modal-color: rgba(23, 18, 38, 0.75);
+
+	--bg-color: #fff;
+	--bg-modal-color: rgba(0, 0, 0, 0.5);
+	--bg-alternate-color: #f3f3f3;
+	--border-color: #ddd;
+
+	--text-color: #333;
+	--title-color: var(--second-color);
+
+	--link-color: var(--main-color);
+	--link-hover-color: var(--second-color);
+
+	--max-width: 1200px;
+	--header-height: 5rem;
+
+	--logo-width: 4rem;
+	--logo-height: 4rem;
+	--logo-spacing: 0.5rem;
+
+	--nav-height: 64px;
+}
+
+/* ********** Reset Styles ********** */
+html {
+	font-family: var(--main-font), var(--alternate-font);
+	font-size: var(--font-size);
+	line-height: var(--line-height);
+	color: var(--text-color);
+	background-color: var(--bg-color);
+}
+
+body {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	background-color: inherit;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+a {
+	text-decoration: none;
+	color: var(--link-color);
+	transition: all 0.3s ease-out;
+}
+
+a:hover {
+	color: var(--link-hover-color);
+}
+
+::selection {
+	background-color: var(--main-color);
+	color: var(--second-color);
+}
+
+/* ********** Bootstrap Styles ********** */
+.bg-dark {
+	background-color: var(--second-color) !important;
+}
+
+.navbar-dark .navbar-toggler-icon {
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+	transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-toggler-icon:hover {
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 150, 217, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.nav-item:hover {
+	background-color: var(--main-modal-color);
+	transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+	color: var(--main-color);
+	font-size: 1.15rem;
+	font-weight: bold;
+	transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav {
+	color: var(--bg-color);
+}
+
+.navbar-brand img {
+	width: auto;
+	height: var(--logo-height);
+}
+
+.form-control {
+	border-color: var(--second-color);
+}
+
+.form-control:focus {
+	border-color: var(--main-color);
+	box-shadow: 0 0 0 0.2rem var(--main-modal-color);
+}
+
+.form-group label {
+	color: var(--main-color);
+}
+
+.form-group .btn {
+	font-weight: bold;
+}
+
+/* ********** My Styles ********** */
+.Footer {
+	background-color: var(--bg-alternate-color);
+}
+
+.u-flowText {
+	font-size: 1.25rem;
+}
+
+.carousel-item {
+	height: 450px;
+}
+
+/* Imágenes de fondo para los avisos */
+.avisos-img-primitiva {
+	background: url('./../img/avi_bolas.jpg');
+	background-size: cover;
+}
+.avisos-img-euromillones {
+	background: url('./../img/avi_euro.jpg');
+	background-size: cover;
+}
+.avisos-img-loteria {
+	background: url('./../img/avi_euros.jpg');
+	background-size: cover;
+}
+
+.info-cabecera {
+	width: 50%;
+	margin: auto;
+	border-bottom: 1px #ddd solid;
+}
+
+/* APUESTAS */
+
+/* SALDOS */
+#saldos .aling-right {
+	text-align: right;
+}
+
+#saldos .aling-center {
+	text-align: center;
+}
+
+/* ********** Media Queries Small ********** */
+@media (min-width: 576px) {
+}
+
+/* ********** Media Queries Medium ********** */
+@media (min-width: 768px) {
+	.u-flowText {
+		font-size: 1.5rem;
+	}
+}
+
+/* ********** Media Queries Large ********** */
+@media (min-width: 992px) {
+	.u-flowText {
+		font-size: 1.75rem;
+	}
+}
+
+/* ********** Media Queries ExtraLarge ********** */
+@media (min-width: 1200px) {
+}
