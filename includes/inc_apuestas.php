@@ -1,3 +1,13 @@
+<?php
+
+$apuesta = leer_ultimo_dia();
+/* var_dump($apuesta);
+exit(); */
+
+$fecha_apu = date("d/m/Y", strtotime($apuesta['fecha']));
+
+?>
+
 <!-- Nuestras apuestas -->
 
 <section id="apuestas" class="bg-light pb-5">
@@ -8,7 +18,7 @@
           <h1 class="text-dark pb-3">
             Apuestas Semanal
           </h1>
-          <p>Datos actualizados a fecha: <?= $apuesta['fecha'] ?></p>
+          <p>Datos actualizados a fecha: <?= $fecha_apu ?></p>
         </div>
       </div>
     </div>

@@ -9,4 +9,5 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
 <!-- Mi Estilos -->
-<link rel="stylesheet" href="css/estilos.css" />
+<link rel="stylesheet" href="./css/iconos.css" />
+<link rel="stylesheet" href="./css/estilos.css" />

@@ -12,7 +12,7 @@ switch ($act_pagina) {
 
   case 'saldos.php':
     /* Saldos */
-    require_once("./includes/inc_enconstruccion.php");
+    require_once("./includes/inc_saldos.php");
     break;
 
   case 'anteriores.php':
