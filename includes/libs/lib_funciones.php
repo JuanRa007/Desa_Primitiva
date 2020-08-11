@@ -17,6 +17,18 @@ function leer_ultimo_dia()
 }
 
 
+// Convierte una fecha de BBDD a formato simple.
+function convierte_fecha($fecha_recibida)
+{
+
+  if (!$fecha_recibida) {
+    $fecha_recibida = date("d/m/Y");
+  }
+
+  return date("d/m/Y", strtotime($fecha_recibida));
+}
+
+
 // Obtiene la fecha de la última aportación realizada.
 // Se usa para mostrar la fecha de actualización en "saldos".
 function obtener_saldos_fecha()
@@ -29,7 +41,8 @@ function obtener_saldos_fecha()
   $row = fetch_array($datos);
 
   if ($row) {
-    $fecha_base = date("d/m/Y", strtotime($row['totfecha']));
+    //$fecha_base = date("d/m/Y", strtotime($row['totfecha']));
+    $fecha_base = convierte_fecha($row['totfecha']);
   }
 
   /* liberar el conjunto de resultados */
@@ -44,8 +57,8 @@ function obtener_saldos_fecha()
 function obtener_saldos()
 {
 
-  $array_saldos[] = "";
   $cestillo_saldo = 0;
+  $fecha_saldo = date("d/m/Y");
 
   // Obtenemos los nombres de los participantes.
   $misql = "SELECT participante FROM participantes order by participante";

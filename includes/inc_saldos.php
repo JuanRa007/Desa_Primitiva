@@ -23,7 +23,7 @@ $saldos_part = obtener_saldos();
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <div class="table-responsive">
-          <table class="table table-striped">
+          <table class="table table-striped table-bordered">
             <caption>
               Saldos actualizados a la fecha de <?= $fecha_ult ?>.
             </caption>
@@ -40,29 +40,29 @@ $saldos_part = obtener_saldos();
               foreach ($saldos_part as $usuario) {
 
                 $participante = $usuario[0];
-                $saldo = $usuario[1];
-                $fecha = $usuario[2];
+                $saldo = number_format(sprintf("%01.2f", $usuario[1]), 2, ',', '.');
+                $fecha = convierte_fecha($usuario[2]);
 
-                echo $participante . "-" . $saldo . "-" . $fecha . "<br>";
+                $clase = "";
+                if ($participante == "BOTE" || $participante == "Cestillo") {
+                  $clase = 'class="table-primary"';
+                }
 
+                $clase_celda = "";
+                if ($saldo <= $saldominimo) {
+                  $clase_celda = "bg-danger";
+                }
 
+                //echo $participante . "-" . $saldo . "-" . $fecha . "<br>";
               ?>
-                <tr class="table-primary">
-                  <td>BOTE</td>
-                  <td class="aling-right">248,67</td>
-                  <td class="aling-center">25/03/2020</td>
+                <tr <?= ($clase) ? $clase : "" ?>>
+                  <td><?= $participante ?></td>
+                  <td class="aling-right <?= ($clase_celda) ? $clase_celda : "" ?> "><?= $saldo ?></td>
+                  <td class="aling-center"><?= $fecha ?></td>
                 </tr>
-
               <?php
               }
               ?>
-
-
-              <tr class="table-primary">
-                <td>Cestillo</td>
-                <td class="aling-right">431,34</td>
-                <td class="aling-center">23/12/2019</td>
-              </tr>
             </tbody>
           </table>
         </div>
