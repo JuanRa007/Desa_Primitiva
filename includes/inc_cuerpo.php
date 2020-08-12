@@ -17,7 +17,7 @@ switch ($act_pagina) {
 
   case 'anteriores.php':
     /* Historial */
-    require_once("./includes/inc_enconstruccion.php");
+    require_once("./includes/inc_anteriores.php");
     break;
 
   case 'mensajes.php':

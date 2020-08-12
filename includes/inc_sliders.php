@@ -6,6 +6,13 @@
       - Premio obtenido en el último sorteo (si ha sido positivo)
       - Saldo del bote
       - Otros avisos (¿¿???)
+
+
+      Se puede generar una base de datos con los avisos a presentar.
+      - Fechas de Vigencias (inicio - fin)
+      - Texto del aviso.
+      - Imagen a presentar (avisos-img-primitiva, etc.)
+      - 
     -->
 <section id="avisos">
   <div id="myCarousel" class="carousel slide" data-ride="carousel">

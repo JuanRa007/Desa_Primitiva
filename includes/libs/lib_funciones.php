@@ -77,6 +77,12 @@ function obtener_saldos()
     $importe_saldo = $row1['totsaldo'];
     $fecha_saldo = $row1['totfecha'];
 
+    // $e=array[];
+    // $e['totparti']=$persona_saldo;
+    // $e['totsaldo']=$importe_saldo;
+    // $e['totfecha']=$fecha_saldo;
+    // $array_saldos[] = $e;
+
     $array_saldos[] = [$persona_saldo, $importe_saldo, $fecha_saldo];
 
     $cestillo_saldo += $importe_saldo;

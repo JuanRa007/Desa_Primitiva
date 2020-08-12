@@ -50,7 +50,7 @@ $saldos_part = obtener_saldos();
 
                 $clase_celda = "";
                 if ($saldo <= $saldominimo) {
-                  $clase_celda = "bg-danger";
+                  $clase_celda = "table-danger";
                 }
 
                 //echo $participante . "-" . $saldo . "-" . $fecha . "<br>";
