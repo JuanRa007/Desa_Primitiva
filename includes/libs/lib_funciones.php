@@ -96,3 +96,67 @@ function obtener_saldos()
 
   return $array_saldos;
 }
+
+
+// Obtenemos todas las apuestas incluidas
+// en el registro pasado.
+function obtener_apuestas($registro)
+{
+
+  // Si no llega nada.
+  if ($registro && isset($registro)) {
+
+    // Fecha apuesta
+    $reg_fecha = $registro['fecha'];
+
+    // Primitiva Fija Semanal
+    $reg_numfijo = $registro['numfijo'];
+    $reg_numfijor = $registro['numfijor'];
+
+    // Primitiva Expecial
+    $reg_numvari = $registro['numvari'];
+    $reg_numvarir = $registro['numvarir'];
+
+    // Euromillón
+    $reg_euromillon = $registro['euromillon'];
+    $reg_euroruno = $registro['euroruno'];
+    $reg_eurordos = $registro['eurordos'];
+
+    // Otras apuestas.
+    $reg_otros = $registro['otros'];
+
+    // Euromillón segundo
+    $reg_euromillon1 = $registro['euromillon1'];
+    $reg_euroruno1 = $registro['euroruno1'];
+    $reg_eurordos1 = $registro['eurordos1'];
+
+    // Primitiva Expecial segunda
+    $reg_numvari1 = $registro['numvari1'];
+    $reg_numvari1r = $registro['numvari1r'];
+
+    // Premio.
+    $reg_premio = $registro['premio'];
+
+    // Euromillón: sólo viernes, sólo martes, semanal.
+    $reg_marvie = $registro['marvie'];
+
+    //===================================================
+    /*     echo $reg_fecha . "<br>";
+    echo $reg_numfijo . "<br>";
+    echo $reg_numfijor . "<br>";
+    echo $reg_numvari . "<br>";
+    echo $reg_numvarir . "<br>";
+    echo $reg_euromillon . "<br>";
+    echo $reg_euroruno . "<br>";
+    echo $reg_eurordos . "<br>";
+    echo $reg_otros . "<br>";
+    echo $reg_euromillon1 . "<br>";
+    echo $reg_euroruno1 . "<br>";
+    echo $reg_eurordos1 . "<br>";
+    echo $reg_numvari1 . "<br>";
+    echo $reg_numvari1r . "<br>";
+    echo $reg_premio . "<br>";
+    echo $reg_marvie . "<br>"; */
+    //===================================================
+  }
+}

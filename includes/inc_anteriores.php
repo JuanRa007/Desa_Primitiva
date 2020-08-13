@@ -1,11 +1,23 @@
 <?php
-
+// Día último de actualización en aportaciones.
 $apuesta = leer_ultimo_dia();
-/* var_dump($apuesta);
-exit(); */
-
 $fecha_apu = date("d/m/Y", strtotime($apuesta['fecha']));
 
+// Obtenemos el mes pasado como parámetro o por defecto, el actual.
+if (!$_POST || !isset($_POST['mes_sel']) || !isset($_POST['ano_sel']) || !isset($_POST['fecha_sel'])) {
+  $fecha_dia = 0;
+  $fecha_mes = date("n", time());
+  $fecha_ano = date("Y", time());
+} elseif (!$_POST['fecha_sel']) {
+  $fecha_dia = 0;
+  $fecha_mes = $_POST['mes_sel'];
+  $fecha_ano = $_POST['ano_sel'];
+} else {
+  $fechacompleta = explode("/", $_POST['fecha_sel']);
+  $fecha_dia = $fechacompleta[0];
+  $fecha_mes = $fechacompleta[1];
+  $fecha_ano = $fechacompleta[2];
+}
 ?>
 
 <!-- Nuestras apuestas -->
@@ -25,8 +37,8 @@ $fecha_apu = date("d/m/Y", strtotime($apuesta['fecha']));
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-md-4 offset-md-4">
-        <table class="table-sm table-bordered table-striped">
+      <div class="col">
+        <table class="table-sm table-bordered table-striped tabla-centra">
           <thead>
             <tr>
               <th colspan="7">

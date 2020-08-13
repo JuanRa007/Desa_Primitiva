@@ -1,11 +1,10 @@
 <?php
 
 $apuesta = leer_ultimo_dia();
-/* var_dump($apuesta);
-exit(); */
+$fecha_apu = convierte_fecha($apuesta['fecha']);
 
-$fecha_apu = date("d/m/Y", strtotime($apuesta['fecha']));
-
+$datos_apuestas = obtener_apuestas($apuesta);
+exit();
 ?>
 
 <!-- Nuestras apuestas -->

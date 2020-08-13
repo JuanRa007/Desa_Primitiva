@@ -160,6 +160,11 @@ a:hover {
 	text-align: center;
 }
 
+/* ANTERIORES */
+.tabla-centra {
+	margin: auto;
+}
+
 /* ********** Media Queries Small ********** */
 @media (min-width: 576px) {
 }
