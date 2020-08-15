@@ -1,0 +1,50 @@
+- Estructura Apuestas
+========================
+
+Apuestas
+  
+  - Premio Obtenido [premio]:
+        decimal(19,4)
+        null - cero - <valor>
+  
+  - Primitiva Fija [numfijo - numfijor]:
+        2 fechas (jueves y sábado) --> calcular en base a [fecha]
+        2 series de 6 números (03-13-23-32-33-43 / 09-17-19-29-39-49)
+  
+  - Primitiva Semanal [numvari - numvarir / numvari1 - numvari1r]
+        2 fechas (jueves y sábado) --> calcular en base a [fecha]
+        X series de 6 o MÁS números (apuesta múltiple), separados por "/".
+  
+  - Euromillones [euromillon - eurouno - eurodos / euromillon1 - eurouno1 - eurodos1]
+        1 o 2 fechas (martes y/o viernes) --> calcular en base a [fecha] [marvie => M / V / T / (null)]
+        X series de 6 o MÁS números (apuesta múltiple), separados por "/".
+  
+  - Otras apuestas [otros]:
+        X tipos de sorteos incluidos, separados por '--------':
+            - El Gordo
+            - Décimo
+            - Bonoloto
+            - Euromillón
+            - Primitiva Sáb => 2004-03-05 00:00:00
+            - PrimitivaE    => 2014-02-10 00:00:00
+            - Aviso
+        Cada tipo de apuesta:
+            - Fecha: Una (30/06/2017) / Dos (14/03/2017 - 17/03/2017) / <ninguna>
+            - Números jugados separados por "-" y varias apuestas "/"
+            - Reintegros: uno (R.3) / varios (R. 01-05) / varios (R.1 - R.5)
+
+===========================================================================================================
+
+Objeto a devolver:
+
+Mis_Apuestas =
+[
+      'titulo'    => "Primitiva Fija" / "Primitiva Semanal" / "Euromillones" / "El Gordo" / "Bonoloto" / "Décimo" / "Aviso"(¿?¿?¿)
+      'subtitulo' => 
+      'fecha'     => array[fecha]
+      'imagen'    => "./img/b_primitiva.png" ... etc.
+      'icono'     => "icon-PrimitivaAJ" ... etc.
+      'numeros'   => 
+
+
+]

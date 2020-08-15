@@ -158,5 +158,10 @@ function obtener_apuestas($registro)
     echo $reg_premio . "<br>";
     echo $reg_marvie . "<br>"; */
     //===================================================
+
+    // Prepara $reg_numfijo
+
+
+
   }
 }
