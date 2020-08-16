@@ -4,7 +4,16 @@ $apuesta = leer_ultimo_dia();
 $fecha_apu = convierte_fecha($apuesta['fecha']);
 
 $datos_apuestas = obtener_apuestas($apuesta);
-//exit();
+
+//echo "<br>";
+//echo print_r($datos_apuestas);
+//echo "<br>";
+//echo var_dump($datos_apuestas);
+//echo "<br>";
+
+echo "FECHAS: " . print_r($datos_apuestas['primitivafija']) . "<br>";
+
+exit();
 ?>
 
 <!-- Nuestras apuestas -->
@@ -93,13 +102,14 @@ $datos_apuestas = obtener_apuestas($apuesta);
 
             <!-- Pruebas con UL INLINE -->
             <div class="container">
-              <ul class="list-inline">
-                <li class="list-inline-item p-2 bg-success rounded-circle">03</li>
-                <li class="list-inline-item p-2 bg-success rounded-circle">05</li>
-                <li class="list-inline-item p-2 bg-success rounded-circle">07</li>
-                <li class="list-inline-item p-2 bg-success rounded-circle">12</li>
-                <li class="list-inline-item p-2 bg-success rounded-circle">17</li>
-                <li class="list-inline-item p-2 bg-success rounded-circle">23</li>
+              <ul class="list-inline text-monospace">
+                <li class="list-inline-item p-2 bg-success rounded-circle shadow">03</li>
+                <li class="list-inline-item p-2 bg-success rounded-circle shadow">05</li>
+                <li class="list-inline-item p-2 bg-success rounded-circle shadow">07</li>
+                <li class="list-inline-item p-2 bg-success rounded-circle shadow">12</li>
+                <li class="list-inline-item p-2 bg-success rounded-circle shadow">17</li>
+                <li class="list-inline-item p-2 bg-success rounded-circle shadow">23</li>
+                <li class="list-inline-item p-2 bg-warning rounded-circle shadow">7</li>
               </ul>
             </div>
 

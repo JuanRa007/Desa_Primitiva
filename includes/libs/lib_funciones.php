@@ -103,6 +103,9 @@ function obtener_saldos()
 function obtener_apuestas($registro)
 {
 
+  // Inicializamos los valores.
+  $mis_apuestas = [];
+
   // Si no llega nada.
   if ($registro && isset($registro)) {
 
@@ -141,7 +144,8 @@ function obtener_apuestas($registro)
     $reg_marvie = $registro['marvie'];
 
     //===================================================
-    /*     echo $reg_fecha . "<br>";
+    /*
+    echo $reg_fecha . "<br>";
     echo $reg_numfijo . "<br>";
     echo $reg_numfijor . "<br>";
     echo $reg_numvari . "<br>";
@@ -156,12 +160,121 @@ function obtener_apuestas($registro)
     echo $reg_numvari1 . "<br>";
     echo $reg_numvari1r . "<br>";
     echo $reg_premio . "<br>";
-    echo $reg_marvie . "<br>"; */
+    echo $reg_marvie . "<br>";
+    */
     //===================================================
 
     // Prepara $reg_numfijo
+    $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor);
 
-
-
+    if ($mi_apuesta) {
+      $mis_apuestas['primitivafija'] = $mi_apuesta;
+    }
   }
+
+  return $mis_apuestas;
+}
+
+// Obtener la fecha del sorteo en base a la fecha dada.
+function obtener_fecha_sorteo($tipo, $fecha)
+{
+
+  // Inicializar variables.
+  $fechas_proceso = [];
+  $diasumres = 0;
+  $opesumres = "";
+
+  // Obtenemos el día de la semana.
+  $diasemana = date("N", strtotime($fecha));
+
+  // En función del tipo enviado.
+  switch ($tipo) {
+    case 'juesab':
+      if ($diasemana < 4) {
+        // Incrementamos el día hasta ser jueves.
+        $diasumres = (4 - $diasemana);
+        $opesumres = "+";
+      } elseif ($diasemana > 4) {
+        // Decrementamos el día hasta ser jueves.
+        $diasumres = ($diasemana - 4);
+        $opesumres = "-";
+      }
+
+      if ($diasumres) {
+        $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      } else {
+        $fecha_new = convierte_fecha($fecha);
+      }
+      //echo "Dia Semana ["  . $fecha . "---" . $fecha_ant . "] => " . $diasemana . ".<br>";
+      //exit();
+      $fechas_proceso[] = $fecha_new;
+
+      // Ahora el sábado siguiente.
+      $diasumres += 2;
+      $opesumres = "+";
+      $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      $fechas_proceso[] = $fecha_new;
+      break;
+
+    default:
+      # code...
+      break;
+  }
+
+  return $fechas_proceso;
+}
+
+// Prepara los números de las apuesta y su reintegro.
+function obtener_numeros_sorteo($numeros)
+{
+
+  // Inicializamos los valores.
+  $num_serie = [];
+
+  // Como separador de las apuestas está el carécter "/"
+  $series_num = explode("/", $numeros);
+  //echo "Serie_NUM:" . print_r($series_num) . "<br>";
+
+  foreach ($series_num as $serie) {
+    //echo "Serie:" . trim($serie) . "<br>";
+
+    $num_serie[] = explode("-", $serie);
+  }
+
+  return $num_serie;
+}
+
+
+// Prepara el campo "numfijo"
+function prepara_primtiva_fija($fecha, $numeros, $reintegro)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+
+  // numeros => 03-13-23-32-33-43 / 09-17-19-29-39-49
+  if ($fecha && isset($fecha) && $numeros && isset($numeros) && $reintegro && isset($reintegro)) {
+
+    // Buscar el jueves y sábado de la fecha indicada.
+    $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
+
+    //echo "<br>";
+    //echo print_r($fecha_juesab);
+    //echo "<br>";
+
+    // Obtener apuestas.
+    $num_sorteo = obtener_numeros_sorteo($numeros);
+
+    //echo "<br>";
+    //echo print_r($num_sorteo);
+    //echo "<br>";
+
+    $apuesta_fija[] = [
+      'fechas' => $fecha_juesab,
+      'numeros' => $num_sorteo,
+      'reintegro' => $reintegro
+    ];
+  }
+
+  return $apuesta_fija;
 }
