@@ -39,12 +39,14 @@ Objeto a devolver:
 
 Mis_Apuestas =
 [
-      'titulo'    => "Primitiva Fija" / "Primitiva Semanal" / "Euromillones" / "El Gordo" / "Bonoloto" / "Décimo" / "Aviso"(¿?¿?¿)
-      'subtitulo' => 
-      'fecha'     => array[fecha]
-      'imagen'    => "./img/b_primitiva.png" ... etc.
-      'icono'     => "icon-PrimitivaAJ" ... etc.
-      'numeros'   => 
+      "titulo"     => "Primitiva Fija" / "Primitiva Semanal" / "Euromillones" / "El Gordo" / "Bonoloto" / "Décimo" / "Aviso"(¿?¿?¿)
+      "subtitulo"  => 
+      "fechas"     => array[fecha]
+      "imagen"     => "./img/b_primitiva.png" ... etc.
+      "icono"      => "icon-PrimitivaAJ" ... etc.
+      "numeros"    => array[numeros]
+      "reintegros" => array[reintegros]
+
 
 
 ]

@@ -97,6 +97,27 @@ function obtener_saldos()
   return $array_saldos;
 }
 
+// Genera un literal con la tabla de fechas.
+function genera_texto_fecha($array_fecha)
+{
+
+  $texto = "";
+
+  if (is_array($array_fecha)) {
+    $j = count($array_fecha);
+    foreach ($array_fecha as $indice => $valor) {
+      if (!$texto) {
+        $texto = $valor;
+      } else {
+        $texto = $texto . " - " . $valor;
+      }
+    }
+  } else {
+    $texto = $array_fecha;
+  }
+  return $texto;
+}
+
 
 // Obtenemos todas las apuestas incluidas
 // en el registro pasado.
@@ -168,7 +189,13 @@ function obtener_apuestas($registro)
     $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor);
 
     if ($mi_apuesta) {
-      $mis_apuestas['primitivafija'] = $mi_apuesta;
+      $mis_apuestas["primitivafija"] = $mi_apuesta;
+    }
+
+    // Prepara $reg_numvari
+    $mi_apuesta = prepara_primtiva_vari($reg_fecha, $reg_numvari, $reg_numvarir, $reg_numvari1, $reg_numvari1r);
+    if ($mi_apuesta) {
+      $mis_apuestas["primitivasema"] = $mi_apuesta;
     }
   }
 
@@ -270,11 +297,49 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro)
     //echo "<br>";
 
     $apuesta_fija[] = [
-      'fechas' => $fecha_juesab,
-      'numeros' => $num_sorteo,
-      'reintegro' => $reintegro
+      "titulo"     => "Primitiva Fija Semanal",
+      "subtitulo"  => "Martes y Jueves",
+      "fechas"     => $fecha_juesab,
+      "imagen"     => "b_primitiva.png",
+      "icono"      => "icon-PrimitivaAJ",
+      "numeros"    => $num_sorteo,
+      "reintegros" => $reintegro
     ];
   }
 
   return $apuesta_fija;
 }
+
+// Prepara Primitiva Vari
+function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1r)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+
+  if ($fecha && isset($fecha) && $numvari && isset($numvari) && $numvarir && isset($numvarir)) {
+
+    // Buscar el jueves y sábado de la fecha indicada.
+    $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
+    $reintegro = $numvarir;
+
+    // Obtener apuestas.
+    if ($numvari1 && isset($numvari1) && $numvari1r && isset($numvari1r)) {
+      $numvari = $numvari . " / " . $numvari1;
+      $reintegro = $reintegro . " - " . $numvari1r;
+    }
+    $num_sorteo = obtener_numeros_sorteo($numvari);
+
+    $apuesta_fija[] = [
+      "titulo"     => "Primitiva Semanal",
+      "subtitulo"  => "Martes y Jueves",
+      "fechas"     => $fecha_juesab,
+      "imagen"     => "b_primitiva.png",
+      "icono"      => "icon-PrimitivaAJ",
+      "numeros"    => $num_sorteo,
+      "reintegros" => $reintegro
+    ];
+  }
+
+  return $apuesta_fija;
+};
