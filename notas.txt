@@ -50,3 +50,28 @@ Mis_Apuestas =
 
 
 ]
+
+
+
+
+array(1)
+ { [0]=> array(7) {
+        ["titulo"]=> string(22) "Primitiva Fija Semanal" 
+        ["subtitulo"]=> string(15) "Martes y Jueves" 
+        ["fechas"]=> array(2) { 
+              [0]=> string(10) "06/08/2020" [1]=> string(10) "08/08/2020"
+               } 
+        ["imagen"]=> string(15) "b_primitiva.png" 
+        ["icono"]=> string(16) "icon-PrimitivaAJ" 
+        ["numeros"]=> array(2) {
+               [0]=> array(6) { 
+                     [0]=> string(2) "03" [1]=> string(2) "13" [2]=> string(2) "23" [3]=> string(2) "32" [4]=> string(2) "33" [5]=> string(3) "43 "
+                      } 
+               [1]=> array(6) { 
+                     [0]=> string(3) "09" [1]=> string(2) "17" [2]=> string(2) "19" [3]=> string(2) "29" [4]=> string(2) "39" [5]=> string(2) "49" 
+                     }
+                   }
+        ["reintegros"]=> string(1) "3"
+         } 
+ }
+

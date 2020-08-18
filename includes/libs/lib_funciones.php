@@ -189,13 +189,19 @@ function obtener_apuestas($registro)
     $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor);
 
     if ($mi_apuesta) {
-      $mis_apuestas["primitivafija"] = $mi_apuesta;
+      $mis_apuestas['primifija'] = $mi_apuesta;
     }
 
     // Prepara $reg_numvari
     $mi_apuesta = prepara_primtiva_vari($reg_fecha, $reg_numvari, $reg_numvarir, $reg_numvari1, $reg_numvari1r);
     if ($mi_apuesta) {
-      $mis_apuestas["primitivasema"] = $mi_apuesta;
+      $mis_apuestas['primisema'] = $mi_apuesta;
+    }
+
+    // Prepara $reg_euromillon
+    $mi_apuesta = prepara_euromillones_vari($reg_fecha, $reg_euromillon, $reg_euroruno, $reg_eurordos, $reg_euromillon1, $reg_euroruno1, $reg_eurordos1, $reg_marvie);
+    if ($mi_apuesta) {
+      $mis_apuestas['euromvari'] = $mi_apuesta;
     }
   }
 
@@ -265,7 +271,7 @@ function obtener_numeros_sorteo($numeros)
   foreach ($series_num as $serie) {
     //echo "Serie:" . trim($serie) . "<br>";
 
-    $num_serie[] = explode("-", $serie);
+    $num_serie[] = explode("-", trim($serie));
   }
 
   return $num_serie;
@@ -297,13 +303,13 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro)
     //echo "<br>";
 
     $apuesta_fija[] = [
-      "titulo"     => "Primitiva Fija Semanal",
-      "subtitulo"  => "Martes y Jueves",
-      "fechas"     => $fecha_juesab,
-      "imagen"     => "b_primitiva.png",
-      "icono"      => "icon-PrimitivaAJ",
-      "numeros"    => $num_sorteo,
-      "reintegros" => $reintegro
+      'titulo'     => "Primitiva Fija Semanal",
+      'subtitulo'  => "Martes y Jueves",
+      'fechas'     => $fecha_juesab,
+      'imagen'     => "b_primitiva.png",
+      'icono'      => "icon-PrimitivaAJ",
+      'numeros'    => $num_sorteo,
+      'reintegros' => $reintegro
     ];
   }
 
@@ -331,15 +337,50 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
     $num_sorteo = obtener_numeros_sorteo($numvari);
 
     $apuesta_fija[] = [
-      "titulo"     => "Primitiva Semanal",
-      "subtitulo"  => "Martes y Jueves",
-      "fechas"     => $fecha_juesab,
-      "imagen"     => "b_primitiva.png",
-      "icono"      => "icon-PrimitivaAJ",
-      "numeros"    => $num_sorteo,
-      "reintegros" => $reintegro
+      'titulo'     => "Primitiva Semanal",
+      'subtitulo'  => "Martes y Jueves",
+      'fechas'     => $fecha_juesab,
+      'imagen'     => "b_primitiva.png",
+      'icono'      => "icon-PrimitivaAJ",
+      'numeros'    => $num_sorteo,
+      'reintegros' => $reintegro
     ];
   }
 
   return $apuesta_fija;
 };
+
+
+// Prepara Euromillones
+function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $euromillon1, $euroruno1, $eurordos1, $marvie)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+
+  if ($fecha && isset($fecha) && $euromillon && isset($euromillon) && $euroruno && isset($euroruno) && $eurordos && isset($eurordos)) {
+
+    // Buscar el jueves y sábado de la fecha indicada.
+    $fecha_marvie = obtener_fecha_sorteo("marvie", $fecha);
+    $reintegro = $euroruno . " - " . $eurordos;
+
+    // Obtener apuestas.
+    if ($euromillon1 && isset($euromillon1) && $euroruno1 && isset($euroruno1) && $eurordos1 && isset($eurordos1)) {
+      $euromillon = $euromillon . " / " . $euromillon1;
+      $reintegro = $reintegro . " / " . $euroruno1 . " - " . $eurordos1;
+    }
+    $num_sorteo = obtener_numeros_sorteo($euromillon);
+
+    $apuesta_fija[] = [
+      'titulo'     => "Euromillones",
+      'subtitulo'  => "Martes y Viernes",
+      'fechas'     => $fecha_marvie,
+      'imagen'     => "b_euromillones.png",
+      'icono'      => "icon-EuromillonesAJ",
+      'numeros'    => $num_sorteo,
+      'reintegros' => $reintegro
+    ];
+  }
+
+  return $apuesta_fija;
+}
