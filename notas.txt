@@ -41,11 +41,13 @@ Mis_Apuestas =
 [
       "titulo"     => "Primitiva Fija" / "Primitiva Semanal" / "Euromillones" / "El Gordo" / "Bonoloto" / "Décimo" / "Aviso"(¿?¿?¿)
       "subtitulo"  => 
+      "color"      => color para los números.
       "fechas"     => array[fecha]
       "imagen"     => "./img/b_primitiva.png" ... etc.
       "icono"      => "icon-PrimitivaAJ" ... etc.
       "numeros"    => array[numeros]
-      "reintegros" => array[reintegros]
+      "reintegros" => array[reintegros],
+      'premio'     => ""
 
 
 

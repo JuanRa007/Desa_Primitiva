@@ -1,5 +1,12 @@
 <?php
 
+/////////////////////////////
+//                         //
+//  FUNCIONES   GENERALES  //
+//                         //
+/////////////////////////////
+
+
 // Obtiene el úlitmo día con apuestas.
 // Se usa para los valores que se muestran en "inicio".
 function leer_ultimo_dia()
@@ -119,6 +126,157 @@ function genera_texto_fecha($array_fecha)
 }
 
 
+// Genera texto con el importe del premio.
+function genera_texto_importe($premio)
+{
+
+  $str_importe = "";
+
+  if ($premio) {
+    $str_importe = number_format(sprintf("%01.2f", $premio), 2, ',', '.');
+  }
+
+  return $str_importe;
+}
+
+
+// Obtenie los valores para las fechas del euromillon.
+function obtener_valor_marvie($marvie)
+{
+
+  $tipo_fecha = "";
+
+  if (!$marvie || $marvie == "") {
+    $marvie = "V";
+  }
+  // Por defecto, martes y viernes.
+  switch ($marvie) {
+    case 'V':
+      $tipo_fecha = "diavie";
+      break;
+    case 'M':
+      $tipo_fecha = "diamar";
+      break;
+    default:
+      $tipo_fecha = "marvie";
+      break;
+  }
+
+  return $tipo_fecha;
+}
+
+
+// Obtener la fecha del sorteo en base a la fecha dada.
+function obtener_fecha_sorteo($tipo, $fecha)
+{
+
+  // Inicializar variables.
+  $fechas_proceso = [];
+  $diasumres = 0;
+  $opesumres = "";
+
+  // Obtenemos el día de la semana.
+  $diasemana = date("N", strtotime($fecha));
+
+  // En función del tipo enviado.
+  switch ($tipo) {
+    case 'juesab':
+      if ($diasemana < 4) {
+        // Incrementamos el día hasta ser jueves.
+        $diasumres = (4 - $diasemana);
+        $opesumres = "+";
+      } elseif ($diasemana > 4) {
+        // Decrementamos el día hasta ser jueves.
+        $diasumres = ($diasemana - 4);
+        $opesumres = "-";
+      }
+
+      if ($diasumres) {
+        $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      } else {
+        $fecha_new = convierte_fecha($fecha);
+      }
+      //echo "Dia Semana ["  . $fecha . "---" . $fecha_ant . "] => " . $diasemana . ".<br>";
+      //exit();
+      $fechas_proceso[] = $fecha_new;
+
+      // Ahora el sábado siguiente.
+      $diasumres += 2;
+      $opesumres = "+";
+      $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      $fechas_proceso[] = $fecha_new;
+      break;
+
+    case 'diamar':
+      # code...
+      break;
+
+    case 'diavie':
+      # code...
+      break;
+
+    case 'marvie':
+      if ($diasemana < 2) {
+        // Incrementamos el día hasta ser martes.
+        $diasumres = (2 - $diasemana);
+        $opesumres = "+";
+      } elseif ($diasemana > 2) {
+        // Decrementamos el día hasta ser martes.
+        $diasumres = ($diasemana - 2);
+        $opesumres = "-";
+      }
+      if ($diasumres) {
+        $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      } else {
+        $fecha_new = convierte_fecha($fecha);
+      }
+      //echo "Dia Semana ["  . $fecha . "---" . $fecha . "] => " . $diasemana . ".<br>";
+      //exit();
+      $fechas_proceso[] = $fecha_new;
+
+      // Ahora el viernes siguiente.
+      $diasumres += 3;
+      $opesumres = "+";
+      $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      $fechas_proceso[] = $fecha_new;
+      break;
+
+    default:
+      # code...
+      break;
+  }
+
+  return $fechas_proceso;
+}
+
+// Prepara los números de las apuesta y su reintegro.
+function obtener_numeros_sorteo($numeros)
+{
+
+  // Inicializamos los valores.
+  $num_serie = [];
+
+  // Como separador de las apuestas está el carécter "/"
+  $series_num = explode("/", $numeros);
+  //echo "Serie_NUM:" . print_r($series_num) . "<br>";
+
+  foreach ($series_num as $serie) {
+    //echo "Serie:" . trim($serie) . "<br>";
+
+    $num_serie[] = explode("-", trim($serie));
+  }
+
+  return $num_serie;
+}
+
+
+/////////////////////////////
+//                         //
+//  FUNCIONES PRINCIPALES  //
+//                         //
+/////////////////////////////
+
+
 // Obtenemos todas las apuestas incluidas
 // en el registro pasado.
 function obtener_apuestas($registro)
@@ -186,7 +344,7 @@ function obtener_apuestas($registro)
     //===================================================
 
     // Prepara $reg_numfijo
-    $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor);
+    $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor, $reg_premio);
 
     if ($mi_apuesta) {
       $mis_apuestas['primifija'] = $mi_apuesta;
@@ -208,78 +366,11 @@ function obtener_apuestas($registro)
   return $mis_apuestas;
 }
 
-// Obtener la fecha del sorteo en base a la fecha dada.
-function obtener_fecha_sorteo($tipo, $fecha)
-{
 
-  // Inicializar variables.
-  $fechas_proceso = [];
-  $diasumres = 0;
-  $opesumres = "";
-
-  // Obtenemos el día de la semana.
-  $diasemana = date("N", strtotime($fecha));
-
-  // En función del tipo enviado.
-  switch ($tipo) {
-    case 'juesab':
-      if ($diasemana < 4) {
-        // Incrementamos el día hasta ser jueves.
-        $diasumres = (4 - $diasemana);
-        $opesumres = "+";
-      } elseif ($diasemana > 4) {
-        // Decrementamos el día hasta ser jueves.
-        $diasumres = ($diasemana - 4);
-        $opesumres = "-";
-      }
-
-      if ($diasumres) {
-        $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
-      } else {
-        $fecha_new = convierte_fecha($fecha);
-      }
-      //echo "Dia Semana ["  . $fecha . "---" . $fecha_ant . "] => " . $diasemana . ".<br>";
-      //exit();
-      $fechas_proceso[] = $fecha_new;
-
-      // Ahora el sábado siguiente.
-      $diasumres += 2;
-      $opesumres = "+";
-      $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
-      $fechas_proceso[] = $fecha_new;
-      break;
-
-    default:
-      # code...
-      break;
-  }
-
-  return $fechas_proceso;
-}
-
-// Prepara los números de las apuesta y su reintegro.
-function obtener_numeros_sorteo($numeros)
-{
-
-  // Inicializamos los valores.
-  $num_serie = [];
-
-  // Como separador de las apuestas está el carécter "/"
-  $series_num = explode("/", $numeros);
-  //echo "Serie_NUM:" . print_r($series_num) . "<br>";
-
-  foreach ($series_num as $serie) {
-    //echo "Serie:" . trim($serie) . "<br>";
-
-    $num_serie[] = explode("-", trim($serie));
-  }
-
-  return $num_serie;
-}
-
-
-// Prepara el campo "numfijo"
-function prepara_primtiva_fija($fecha, $numeros, $reintegro)
+////////////////////////////////
+// Prepara el campo "numfijo" //
+////////////////////////////////
+function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
 {
 
   // Incializar variable a devolver.
@@ -287,6 +378,11 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro)
 
   // numeros => 03-13-23-32-33-43 / 09-17-19-29-39-49
   if ($fecha && isset($fecha) && $numeros && isset($numeros) && $reintegro && isset($reintegro)) {
+
+    // Premio.
+    if ($premio && isset($premio)) {
+      $imp_premio = number_format(sprintf("%01.2f", $premio), 2, ',', '.');
+    }
 
     // Buscar el jueves y sábado de la fecha indicada.
     $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
@@ -297,6 +393,7 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro)
 
     // Obtener apuestas.
     $num_sorteo = obtener_numeros_sorteo($numeros);
+    $reintegros = [$reintegro, $reintegro];
 
     //echo "<br>";
     //echo print_r($num_sorteo);
@@ -305,18 +402,22 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro)
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Fija Semanal",
       'subtitulo'  => "Martes y Jueves",
+      'color'      => "bg-success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
       'icono'      => "icon-PrimitivaAJ",
       'numeros'    => $num_sorteo,
-      'reintegros' => $reintegro
+      'reintegros' => $reintegros,
+      'premio'     => $imp_premio
     ];
   }
 
   return $apuesta_fija;
 }
 
-// Prepara Primitiva Vari
+//////////////////////////////////
+// Prepara los campos "numvari" //
+//////////////////////////////////
 function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1r)
 {
 
@@ -327,58 +428,85 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
 
     // Buscar el jueves y sábado de la fecha indicada.
     $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
-    $reintegro = $numvarir;
+    $reintegros[] = $numvarir;
 
     // Obtener apuestas.
     if ($numvari1 && isset($numvari1) && $numvari1r && isset($numvari1r)) {
       $numvari = $numvari . " / " . $numvari1;
-      $reintegro = $reintegro . " - " . $numvari1r;
+      $reintegros[] = $numvari1r;
     }
     $num_sorteo = obtener_numeros_sorteo($numvari);
 
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Semanal",
       'subtitulo'  => "Martes y Jueves",
+      'color'      => "bg-success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
       'icono'      => "icon-PrimitivaAJ",
       'numeros'    => $num_sorteo,
-      'reintegros' => $reintegro
+      'reintegros' => $reintegros,
+      'premio'     => ""
     ];
   }
 
   return $apuesta_fija;
 };
 
-
-// Prepara Euromillones
+/////////////////////////////////////
+// Prepara los campos "euromillon" //
+/////////////////////////////////////
 function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $euromillon1, $euroruno1, $eurordos1, $marvie)
 {
 
   // Incializar variable a devolver.
   $apuesta_fija = [];
+  // Controlar "marvie"
+  $tipo_fecha = obtener_valor_marvie($marvie);
 
   if ($fecha && isset($fecha) && $euromillon && isset($euromillon) && $euroruno && isset($euroruno) && $eurordos && isset($eurordos)) {
 
     // Buscar el jueves y sábado de la fecha indicada.
-    $fecha_marvie = obtener_fecha_sorteo("marvie", $fecha);
-    $reintegro = $euroruno . " - " . $eurordos;
+    $fecha_marvie = obtener_fecha_sorteo($tipo_fecha, $fecha);
+
+    // Formateamos los reintegros a dos números.
+    $euroruno = number_format($euroruno, 0, ',', '.');
+    if (strlen($euroruno) == 1) {
+      $euroruno = '0' . $euroruno;
+    }
+    $eurordos = number_format($eurordos, 0, ',', '.');
+    if (strlen($eurordos) == 1) {
+      $eurordos = '0' . $eurordos;
+    }
+    $reintegros[] = $euroruno . " - " . $eurordos;
 
     // Obtener apuestas.
     if ($euromillon1 && isset($euromillon1) && $euroruno1 && isset($euroruno1) && $eurordos1 && isset($eurordos1)) {
       $euromillon = $euromillon . " / " . $euromillon1;
-      $reintegro = $reintegro . " / " . $euroruno1 . " - " . $eurordos1;
+      // Formateamos los reintegros a dos números.
+      $euroruno1 = number_format($euroruno1, 0, ',', '.');
+      if (strlen($euroruno1) == 1) {
+        $euroruno1 = '0' . $euroruno1;
+      }
+      $eurordos1 = number_format($eurordos1, 0, ',', '.');
+      if (strlen($eurordos1) == 1) {
+        $eurordos1 = '0' . $eurordos1;
+      }
+
+      $reintegros[] = $euroruno1 . " - " . $eurordos1;
     }
     $num_sorteo = obtener_numeros_sorteo($euromillon);
 
     $apuesta_fija[] = [
       'titulo'     => "Euromillones",
       'subtitulo'  => "Martes y Viernes",
+      'color'      => "bg-primary",
       'fechas'     => $fecha_marvie,
       'imagen'     => "b_euromillones.png",
       'icono'      => "icon-EuromillonesAJ",
       'numeros'    => $num_sorteo,
-      'reintegros' => $reintegro
+      'reintegros' => $reintegros,
+      'premio'     => ""
     ];
   }
 
