@@ -18,6 +18,8 @@ if (!$_POST || !isset($_POST['mes_sel']) || !isset($_POST['ano_sel']) || !isset(
   $fecha_mes = $fechacompleta[1];
   $fecha_ano = $fechacompleta[2];
 }
+
+$calendario = obtener_calendario($fecha_mes, $fecha_ano);
 ?>
 
 <!-- Nuestras apuestas -->

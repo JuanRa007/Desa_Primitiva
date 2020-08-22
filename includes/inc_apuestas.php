@@ -44,7 +44,7 @@ $datos_apuestas = obtener_apuestas($apuesta);
       <div class="jumbotron">
         <h1 class="display-4">PREMIO</h1>
         <hr class="my-4">
-        <p class="lead text-center">Hemos obtenido un premio por importe de <strong><?= genera_texto_importe($apuesta["premio"]) ?></strong>
+        <p class="h2 text-center">Hemos obtenido un premio por importe de <strong><?= genera_texto_importe($apuesta["premio"]) ?></strong>
         </p>
       </div>
     <?php

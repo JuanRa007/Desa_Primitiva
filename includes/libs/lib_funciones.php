@@ -25,16 +25,26 @@ function leer_ultimo_dia()
 
 
 // Convierte una fecha de BBDD a formato simple.
-function convierte_fecha($fecha_recibida)
+function convierte_fecha($fecha_recibida, $formato = "d/m/Y")
 {
 
   if (!$fecha_recibida) {
-    $fecha_recibida = date("d/m/Y");
+    $fecha_recibida = date($formato);
   }
 
-  return date("d/m/Y", strtotime($fecha_recibida));
+  return date($formato, strtotime($fecha_recibida));
 }
 
+
+// Ultimo día para el mes y año dado.
+function ultimo_dia_mes($fecmes, $fecano)
+{
+  $ultimo_dia = 28;
+  while (checkdate($fecmes, $ultimo_dia + 1, $fecano)) {
+    $ultimo_dia++;
+  }
+  return $ultimo_dia;
+}
 
 // Obtiene la fecha de la última aportación realizada.
 // Se usa para mostrar la fecha de actualización en "saldos".
@@ -208,11 +218,39 @@ function obtener_fecha_sorteo($tipo, $fecha)
       break;
 
     case 'diamar':
-      # code...
+      if ($diasemana < 2) {
+        // Incrementamos el día hasta ser martes.
+        $diasumres = (2 - $diasemana);
+        $opesumres = "+";
+      } elseif ($diasemana > 2) {
+        // Decrementamos el día hasta ser martes.
+        $diasumres = ($diasemana - 2);
+        $opesumres = "-";
+      }
+      if ($diasumres) {
+        $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      } else {
+        $fecha_new = convierte_fecha($fecha);
+      }
+      $fechas_proceso[] = $fecha_new;
       break;
 
     case 'diavie':
-      # code...
+      if ($diasemana < 5) {
+        // Incrementamos el día hasta ser viernes.
+        $diasumres = (5 - $diasemana);
+        $opesumres = "+";
+      } elseif ($diasemana > 5) {
+        // Decrementamos el día hasta ser viernes.
+        $diasumres = ($diasemana - 5);
+        $opesumres = "-";
+      }
+      if ($diasumres) {
+        $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      } else {
+        $fecha_new = convierte_fecha($fecha);
+      }
+      $fechas_proceso[] = $fecha_new;
       break;
 
     case 'marvie':
@@ -361,6 +399,9 @@ function obtener_apuestas($registro)
     if ($mi_apuesta) {
       $mis_apuestas['euromvari'] = $mi_apuesta;
     }
+
+    // Prepara $reg_otros
+
   }
 
   return $mis_apuestas;

@@ -46,7 +46,6 @@ function consulta($query)
 
 function fetch_array($result)
 {
-  global $con;
 
   return mysqli_fetch_array($result);
 }
