@@ -20,6 +20,16 @@ if (!$_POST || !isset($_POST['mes_sel']) || !isset($_POST['ano_sel']) || !isset(
 }
 
 $calendario = obtener_calendario($fecha_mes, $fecha_ano);
+
+//echo "<br><pre><code>";
+//while ($myrow = fetch_array($datos)) {
+//  echo $myrow['dfecha'] . "<br>";
+//}
+//echo print_r($calendario);
+//echo "</code></pre><br>";
+
+
+
 ?>
 
 <!-- Nuestras apuestas -->
@@ -40,73 +50,49 @@ $calendario = obtener_calendario($fecha_mes, $fecha_ano);
   <div class="container">
     <div class="row">
       <div class="col">
-        <table class="table-sm table-bordered table-striped tabla-centra">
+        <table class="table-sm table-bordered table-striped tabla-centra text-center">
           <thead>
             <tr>
               <th colspan="7">
                 <span class="btn-group">
-                  <a class="btn"><i class="icon-chevron-left"></i></a>
-                  <a class="btn active">February 2012</a>
-                  <a class="btn"><i class="icon-chevron-right"></i></a>
+                  <a class="btn btn-outline-info"><i class="fas fa-angle-left"></i></a>
+                  <button type="button" class="btn btn-secondary"><?= obtener_nombre_mes_ano($fecha_mes, $fecha_ano); ?></button>
+                  <a class="btn btn-outline-info"><i class="fas fa-angle-right"></i></a>
                 </span>
               </th>
             </tr>
             <tr>
-              <th>Su</th>
-              <th>Mo</th>
-              <th>Tu</th>
-              <th>We</th>
-              <th>Th</th>
-              <th>Fr</th>
-              <th>Sa</th>
+              <th>L</th>
+              <th>M</th>
+              <th>X</th>
+              <th>J</th>
+              <th>V</th>
+              <th>S</th>
+              <th>D</th>
             </tr>
           </thead>
           <tbody>
+
+
+            <?php   ?>
+
+
+
             <tr>
-              <td class="muted">29</td>
-              <td class="muted">30</td>
-              <td class="muted">31</td>
+              <td class="text-muted">29</td>
+              <td class="text-muted">30</td>
+              <td class="text-muted">31</td>
               <td>1</td>
               <td>2</td>
               <td>3</td>
               <td>4</td>
             </tr>
-            <tr>
-              <td>5</td>
-              <td>6</td>
-              <td>7</td>
-              <td>8</td>
-              <td>9</td>
-              <td>10</td>
-              <td>11</td>
-            </tr>
-            <tr>
-              <td>12</td>
-              <td>13</td>
-              <td>14</td>
-              <td>15</td>
-              <td>16</td>
-              <td>17</td>
-              <td>18</td>
-            </tr>
-            <tr>
-              <td>19</td>
-              <td class="btn-primary"><strong>20</strong></td>
-              <td>21</td>
-              <td>22</td>
-              <td>23</td>
-              <td>24</td>
-              <td>25</td>
-            </tr>
-            <tr>
-              <td>26</td>
-              <td>27</td>
-              <td>28</td>
-              <td>29</td>
-              <td class="muted">1</td>
-              <td class="muted">2</td>
-              <td class="muted">3</td>
-            </tr>
+
+
+
+            <?php   ?>
+
+
           </tbody>
         </table>
       </div>

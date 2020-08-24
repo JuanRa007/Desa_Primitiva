@@ -39,7 +39,7 @@ $datos_apuestas = obtener_apuestas($apuesta);
 
     <?php
     // Hay PREMIO
-    if ($apuesta["premio"]) {
+    if ($apuesta["premio"] > 0) {
     ?>
       <div class="jumbotron">
         <h1 class="display-4">PREMIO</h1>

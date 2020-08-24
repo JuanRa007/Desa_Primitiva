@@ -23,6 +23,28 @@ function leer_ultimo_dia()
   return $row;
 }
 
+// Devolvemos el literal del mes y año.
+function obtener_nombre_mes_ano($mes, $ano)
+{
+
+  // Meses
+  $lit_meses = ['[ERROR]', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  // Control
+  if (!$mes || $mes === 0 || $mes > 12) {
+    $mes = 0;
+  }
+  // Mes
+  $tex_mes = $lit_meses[$mes];
+  if (!$ano || $ano === 0 || strlen($ano) < 4) {
+    $ano = date('Y');
+  }
+  // Año
+  $tex_ano = $ano;
+
+  return $tex_mes . " - " . $tex_ano;
+}
+
 
 // Convierte una fecha de BBDD a formato simple.
 function convierte_fecha($fecha_recibida, $formato = "d/m/Y")
@@ -45,6 +67,35 @@ function ultimo_dia_mes($fecmes, $fecano)
   }
   return $ultimo_dia;
 }
+
+
+// Obtenemos qué tipo de día es para el calendario.
+function obtener_tipo_dia($dia_actual, $mes_actual, $ano_actual, $dias_sorteo)
+{
+
+  // Inicializar.
+  $mensa = "";
+
+  // Día de hoy.
+  $dia_hoy = date('d');
+  $mes_hoy = date('m');
+  $ano_hoy = date('Y');
+
+  $fecha_mirar = mktime(12, 0, 0, $mes_actual, $dia_actual, $ano_actual);
+  // Buscamos el tipo de día.
+  if ($dia_actual == $dia_hoy && $mes_actual == $mes_hoy && $ano_actual == $ano_hoy) {
+    $mensa = "hoy";
+  } elseif (in_array($dia_actual, $dias_sorteo)) {
+    $mensa = "sorteo";
+  } elseif (date("N", $fecha_mirar) > 5) {
+    $mensa = "festivo";
+  } else {
+    $mensa = "diario";
+  }
+
+  return $mensa;
+}
+
 
 // Obtiene la fecha de la última aportación realizada.
 // Se usa para mostrar la fecha de actualización en "saldos".
