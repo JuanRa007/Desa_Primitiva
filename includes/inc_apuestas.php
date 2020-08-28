@@ -1,6 +1,6 @@
 <?php
 
-$apuesta = leer_ultimo_dia();
+$apuesta = leer_apuesta_dia();
 $fecha_apu = convierte_fecha($apuesta['fecha']);
 
 $datos_apuestas = obtener_apuestas($apuesta);

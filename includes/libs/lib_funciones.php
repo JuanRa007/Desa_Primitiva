@@ -7,13 +7,19 @@
 /////////////////////////////
 
 
-// Obtiene el úlitmo día con apuestas.
+// Obtiene el úlitmo día con apuestas o el día pasado por parámetro.
 // Se usa para los valores que se muestran en "inicio".
-function leer_ultimo_dia()
+function leer_apuesta_dia($fecha_dia = "")
 {
 
-  $misql = "SELECT * FROM numapuesta order by fecha desc LIMIT 1";
-  $misql = escape($misql);
+  // Si no nos llega un fecha o es incorrecta, buscamos el más nuevo,
+  // Si nos llega un fecha válida, devolvemos ese día.
+  if ($fecha_dia) {
+    $misql = 'SELECT * FROM numapuesta WHERE fecha = "' . $fecha_dia . '"';
+  } else {
+    $misql = "SELECT * FROM numapuesta order by fecha desc LIMIT 1";
+  }
+  //$misql = escape($misql);
   $datos = consulta($misql);
   $row = fetch_array($datos);
 
@@ -31,6 +37,7 @@ function obtener_nombre_mes_ano($mes, $ano)
   $lit_meses = ['[ERROR]', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   // Control
+  $mes = intval($mes);
   if (!$mes || $mes === 0 || $mes > 12) {
     $mes = 0;
   }
@@ -452,7 +459,7 @@ function obtener_apuestas($registro)
     }
 
     // Prepara $reg_otros
-
+    $mi_apuesta = prepara_bloque_otros($reg_fecha, $reg_otros);
   }
 
   return $mis_apuestas;
@@ -600,6 +607,34 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
       'reintegros' => $reintegros,
       'premio'     => ""
     ];
+  }
+
+  return $apuesta_fija;
+}
+
+/////////////////////////////////////
+// Prepara el campo bloque "otros" //
+/////////////////////////////////////
+function prepara_bloque_otros($fecha, $otros)
+{
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+
+  if ($fecha && isset($fecha) && $otros && isset($otros)) {
+
+
+
+    //$apuesta_fija[] = [
+    //  'titulo'     => "Euromillones",
+    //  'subtitulo'  => "Martes y Viernes",
+    //  'color'      => "bg-primary",
+    //  'fechas'     => $fecha_marvie,
+    //  'imagen'     => "b_euromillones.png",
+    //  'icono'      => "icon-EuromillonesAJ",
+    //  'numeros'    => $num_sorteo,
+    //  'reintegros' => $reintegros,
+    //  'premio'     => ""
+    //];
   }
 
   return $apuesta_fija;
