@@ -3,8 +3,7 @@
 <html lang="es">
 
 <head>
-  <title>Nuestras Apuestas BETA</title>
-  <meta name="description" content="Bienvenidos a Nuestras Apuestas: web dedicada al control del grupo de apostantes." />
+  <title><?= $app_name ?></title>
   <?php require_once("./includes/inc_meta.php"); ?>
 </head>
 

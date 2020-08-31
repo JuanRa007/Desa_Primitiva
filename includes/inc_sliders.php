@@ -14,6 +14,13 @@
       - Imagen a presentar (avisos-img-primitiva, etc.)
       - 
     -->
+<?php
+
+
+
+?>
+
+
 <section id="avisos">
   <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -62,6 +69,8 @@
         </div>
       </div>
     </div>
+
+
     <!-- Selectores laterales -->
     <a href="#myCarousel" data-slide="prev" class="carousel-control-prev">
       <span class="carousel-control-prev-icon"></span>

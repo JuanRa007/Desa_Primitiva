@@ -152,13 +152,34 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
         ?>
       </tbody>
     </table>
+    <table class="table-sm table-bordered table-striped tabla-centra text-center mt-5">
+      <tbody>
+        <form action="anteriores.php" method="post">
+          <tr>
+            <td>
+              <select name="messel" class="custom-select custom-select-sm">
+                <?= obtener_select_meses($fecha_mes) ?>
+              </select>
+            </td>
+            <td>
+              <select name="anosel" class="custom-select custom-select-sm">
+                <?= obtener_select_anos($fecha_ano) ?>
+              </select>
+            </td>
+            <td>
+              <button type="submit" class="btn btn-secondary btn-sm">IR AL MES</button>
+            </td>
+          </tr>
+        </form>
+      </tbody>
+    </table>
 
     <?php
     if ($fecha_dia > 0) {
     ?>
       <!--     RESTO -->
-      <div class="row">
-        <div class="col">
+      <div class=" row">
+        <div class="col-sm-6">
           <div class="info-cabecera mt-5">
             <h5 class="text-dark pb-3">
               Fecha sorteo: <?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?>
@@ -168,7 +189,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
             </div>
           </div>
         </div>
-        <div class="col">
+        <div class="col-sm-6">
           <div class="info-cabecera mt-5">
             <h5 class="text-dark pb-3">
               Premio: <?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?>
@@ -179,6 +200,29 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
           </div>
         </div>
       </div>
+
+      <?php
+      // Recorremos todos las apuestas obtenidas.
+      foreach ($datos_apuestas as $apuesta => $apuestas) {
+        echo "APUESTA: " . $apuesta . "<br>";
+        foreach ($apuestas as $indice => $valores) {
+          echo "--> Indice: [" . $indice . "] --- >> [<br>";
+          foreach ($valores as $j => $valor) {
+            # code...
+            echo "----> J: {" . $j . "} -> {";
+            if (is_array($valor)) {
+              echo implode(" = ", $valor);
+            } else {
+              echo $valor;
+            }
+            echo "}<br>";
+          }
+          echo "] << --- (Fin Indice)<br><br>";
+        }
+        echo "<hr>";
+      }
+      ?>
+
       <!--     RESTO -->
     <?php
     }

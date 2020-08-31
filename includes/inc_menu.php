@@ -22,7 +22,7 @@
             <a href="mensajes.php" class="nav-link">Blog</a>
           </li>
           <li class="nav-item <?= ($act_pagina == "acercade.php") ? "active" : "" ?>">
-            <a href=" acercade.php" class="nav-link">Acerca de</a>
+            <a href="acercade.php" class="nav-link">Acerca de</a>
           </li>
         </ul>
       </div>

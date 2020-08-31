@@ -1,3 +1,5 @@
+<!-- Descripción de la página -->
+<meta name="description" content="Bienvenidos a Nuestras Apuestas: web dedicada al control del grupo de apostantes." />
 <!-- Valores META para los ficheros PHP -->
 <meta charset="UTF-8" />
 <link rel="icon" href="./img/favicon.ico" />

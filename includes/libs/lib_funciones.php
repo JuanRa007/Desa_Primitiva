@@ -29,22 +29,30 @@ function leer_apuesta_dia($fecha_dia = "")
   return $row;
 }
 
-// Devolvemos el literal del mes y año.
-function obtener_nombre_mes_ano($mes, $ano)
+// Obtenemos el literal del mes.
+function obtener_nombre_mes($mes)
 {
 
   // Meses
   $lit_meses = ['[ERROR]', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
+  return $lit_meses[$mes];
+}
+
+// Devolvemos el literal del mes y año.
+function obtener_nombre_mes_ano($mes, $ano)
+{
+
+
   // Control
   $mes = intval($mes);
   if (!$mes || $mes === 0 || $mes > 12) {
-    $mes = 0;
+    $mes = date("n", time());
   }
   // Mes
-  $tex_mes = $lit_meses[$mes];
+  $tex_mes = obtener_nombre_mes($mes);
   if (!$ano || $ano === 0 || strlen($ano) < 4) {
-    $ano = date('Y');
+    $ano = date("Y", time());
   }
   // Año
   $tex_ano = $ano;
@@ -619,22 +627,131 @@ function prepara_bloque_otros($fecha, $otros)
 {
   // Incializar variable a devolver.
   $apuesta_fija = [];
+  // Separador.
+  $text_separador = "--------";
 
   if ($fecha && isset($fecha) && $otros && isset($otros)) {
 
+    echo "----> Otros:" . $otros . "<br><br>";
+
+    // Trabajamos con una copia.
+    $otros_bak = $otros;
+
+    while (strlen($otros_bak)) {
+
+      // Nos quedamos con la parte hasta $text_separador.
+      $pos_final = stripos($otros_bak, $text_separador);
+      if ($pos_final !== false) {
+        $strmirar = trim(substr($otros_bak, 1, $pos_final));
+        $otros_bak = substr($otros_bak, $pos_final + strlen($text_separador));
+      } else {
+        $strmirar = trim($otros_bak);
+        $otros_bak = "";
+      }
+
+      echo "----> StrMirar: [" . $strmirar . "]<br><br>";
+      echo "----> Otros_Bak: [" . $otros_bak . "]<br><br>";
+
+      // Buscamos Euromillones.
+      $pos1 = stripos($strmirar, "Euromillón");
+      if ($pos1 !== false) {
+
+        // Preparamos Euromillones.
+        echo "---------------------> [ EUROMILLONES ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Euromillones
 
 
-    //$apuesta_fija[] = [
-    //  'titulo'     => "Euromillones",
-    //  'subtitulo'  => "Martes y Viernes",
-    //  'color'      => "bg-primary",
-    //  'fechas'     => $fecha_marvie,
-    //  'imagen'     => "b_euromillones.png",
-    //  'icono'      => "icon-EuromillonesAJ",
-    //  'numeros'    => $num_sorteo,
-    //  'reintegros' => $reintegros,
-    //  'premio'     => ""
-    //];
+
+      // Buscamos Bonoloto.
+      $pos1 = stripos($strmirar, "Bonoloto");
+      if ($pos1 !== false) {
+
+        // Preparamos Bonoloto.
+        echo "---------------------> [ BONOLOTO ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Bonoloto
+
+
+
+      // Buscamos El Gordo.
+      $pos1 = stripos($strmirar, "El Gordo");
+      if ($pos1 !== false) {
+
+        // Preparamos El Gordo.
+        echo "---------------------> [ EL GORDO ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // El Gordo
+
+
+
+      // Buscamos Décimo.
+      $pos1 = stripos($strmirar, "Décimo");
+      if ($pos1 !== false) {
+
+        // Preparamos Décimo.
+        echo "---------------------> [ DÉCIMO ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Décimo
+
+
+
+      // Buscamos Once.
+      $pos1 = stripos($strmirar, "Once");
+      if ($pos1 !== false) {
+
+        // Preparamos Once.
+        echo "---------------------> [ ONCE ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Once
+
+
+
+      // Buscamos PrimitivaE.
+      $pos1 = stripos($strmirar, "PrimitivaE");
+      if ($pos1 !== false) {
+
+        // Preparamos PrimitivaE.
+        echo "---------------------> [ PRIMITIVAE ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // PrimitivaE
+
+
+
+      // Buscamos Aviso.
+      $pos1 = stripos($strmirar, "Aviso");
+      if ($pos1 !== false) {
+
+        // Preparamos Aviso.
+        echo "---------------------> [ AVISO ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Aviso
+
+      // Buscamos Desconocido
+      if ($strmirar) {
+        // Preparamos Desconocido.
+        echo "---------------------> [ DESCONOCIDO ]<br>";
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Desconocido
+
+
+    }   // end while
   }
 
   return $apuesta_fija;

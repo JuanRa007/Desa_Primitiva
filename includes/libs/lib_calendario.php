@@ -113,3 +113,50 @@ function obtener_calendario(&$fecmes, &$fecano)
 
   return $dias_calendario;
 }
+
+
+// Devuelve los select para los meses del año.
+// Los valores sin la etiqueta "select".
+function obtener_select_meses($mes = 0)
+{
+
+  $valores = "";
+  if ($mes === 0) {
+    $mes = date("n", time());
+  }
+
+  for ($i = 1; $i < 13; $i++) {
+
+    $valores .= '<option value="' . $i . '"';
+    if ($mes == $i) {
+      $valores .= ' selected';
+    }
+    $valores .= '>' . obtener_nombre_mes($i) . '</option>';
+  }
+
+  return $valores;
+}
+
+// Devuelve los select para los años.
+// Los valores sin la etiqueta "select".
+function obtener_select_anos($ano)
+{
+
+  global $rangoanoini, $rangoanofin;
+
+  $valores = "";
+  if ($ano === 0) {
+    $ano = date("Y", time());
+  }
+
+  for ($i = $rangoanoini; $i <= $rangoanofin; $i++) {
+
+    $valores .= '<option value="' . $i . '"';
+    if ($ano == $i) {
+      $valores .= ' selected';
+    }
+    $valores .= '>' . $i . '</option>';
+  }
+
+  return $valores;
+}
