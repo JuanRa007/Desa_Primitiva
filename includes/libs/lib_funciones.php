@@ -15,7 +15,7 @@ function leer_apuesta_dia($fecha_dia = "")
   // Si no nos llega un fecha o es incorrecta, buscamos el más nuevo,
   // Si nos llega un fecha válida, devolvemos ese día.
   if ($fecha_dia) {
-    $misql = 'SELECT * FROM numapuesta WHERE fecha = "' . $fecha_dia . '"';
+    $misql = "SELECT * FROM numapuesta WHERE fecha = '$fecha_dia'";
   } else {
     $misql = "SELECT * FROM numapuesta order by fecha desc LIMIT 1";
   }
@@ -153,7 +153,7 @@ function obtener_saldos()
     $persona_saldo = $participante['participante'];
     //echo $persona_saldo . "<br>";
 
-    $misql1 = 'SELECT SUM(importe) as totsaldo, MAX(fecha) as totfecha FROM aportaciones WHERE participante = "' . $persona_saldo . '"';
+    $misql1 = "SELECT SUM(importe) as totsaldo, MAX(fecha) as totfecha FROM aportaciones WHERE participante = '$persona_saldo'";
     $datos1 = consulta($misql1);
     $row1 = fetch_array($datos1);
 
@@ -642,15 +642,15 @@ function prepara_bloque_otros($fecha, $otros)
       // Nos quedamos con la parte hasta $text_separador.
       $pos_final = stripos($otros_bak, $text_separador);
       if ($pos_final !== false) {
-        $strmirar = trim(substr($otros_bak, 1, $pos_final));
-        $otros_bak = substr($otros_bak, $pos_final + strlen($text_separador));
+        $strmirar = trim(substr($otros_bak, 0, $pos_final));
+        $otros_bak = trim(substr($otros_bak, $pos_final + strlen($text_separador)));
       } else {
         $strmirar = trim($otros_bak);
         $otros_bak = "";
       }
 
-      echo "----> StrMirar: [" . $strmirar . "]<br><br>";
-      echo "----> Otros_Bak: [" . $otros_bak . "]<br><br>";
+      //echo "----> StrMirar: [" . $strmirar . "]<br><br>";
+      //echo "----> Otros_Bak: [" . $otros_bak . "]<br><br>";
 
       // Buscamos Euromillones.
       $pos1 = stripos($strmirar, "Euromillón");
@@ -658,6 +658,7 @@ function prepara_bloque_otros($fecha, $otros)
 
         // Preparamos Euromillones.
         echo "---------------------> [ EUROMILLONES ]<br>";
+        // prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $euromillon1, $euroruno1, $eurordos1, $marvie)
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";

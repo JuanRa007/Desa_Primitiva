@@ -27,7 +27,7 @@ switch ($act_pagina) {
 
   case 'acercade.php':
     /* Acerca de */
-    require_once("./includes/inc_enconstruccion.php");
+    require_once("./includes/inc_acercade.php");
     break;
 
   default:

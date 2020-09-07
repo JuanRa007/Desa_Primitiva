@@ -2,6 +2,7 @@
 
 $apuesta = leer_apuesta_dia();
 $fecha_apu = convierte_fecha($apuesta['fecha']);
+$fecha_diff = 0;
 
 $datos_apuestas = obtener_apuestas($apuesta);
 //$primitiva_fija = $datos_apuestas["primifija"];
@@ -93,18 +94,18 @@ $datos_apuestas = obtener_apuestas($apuesta);
                     <?php
                     foreach ($numeros as $i => $num) {
                     ?>
-                      <li class="list-inline-item p-3 mb-3 <?= $apuesta["color"] ?> rounded-circle shadow"><?= $num ?></li>
+                      <li class="list-inline-item p-1 mb-1 <?= $apuesta["color"] ?> rounded-circle shadow"><?= $num ?></li>
                     <?php
                     }
                     if (strpos($reintegros_sorteo[$ind_rei], "-") > 0) {
                       $rei_parcial = explode("-", $reintegros_sorteo[$ind_rei]);
                     ?>
-                      <li class="list-inline-item p-3 mb-3 bg-warning rounded-circle shadow"><?= $rei_parcial[0]; ?></li>
-                      <li class="list-inline-item p-3 mb-3 bg-warning rounded-circle shadow"><?= $rei_parcial[1]; ?></li>
+                      <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $rei_parcial[0]; ?></li>
+                      <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $rei_parcial[1]; ?></li>
                     <?php
                     } else {
                     ?>
-                      <li class="list-inline-item p-3 mb-3 bg-warning rounded-circle shadow"><?= $reintegros_sorteo[$ind_rei] ?></li>
+                      <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $reintegros_sorteo[$ind_rei] ?></li>
                     <?php
                     }
                     ?>
@@ -116,7 +117,7 @@ $datos_apuestas = obtener_apuestas($apuesta);
               ?>
               <!-- Submensaje -->
               <p class="card-text">
-                <small class="text-muted">Last updated 3 mins ago</small>
+                <small class="text-muted">Actualizado hace <?= $fecha_diff ?> días.</small>
               </p>
             </div>
           </div>

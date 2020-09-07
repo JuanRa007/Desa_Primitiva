@@ -31,7 +31,7 @@ function obtener_calendario(&$fecmes, &$fecano)
   $diafin = convierte_fecha($diafin, "d-m-Y") . " 00:00:00";
 
   // Leer los días con sorteo del mes.
-  //$misql = "SELECT DATE_FORMAT(fecha,'%d') as dfecha FROM numapuesta WHERE fecha >= STR_TO_DATE('" . $diaini . "' , '%d-%m-%Y %H:%i:%s') and  fecha <= STR_TO_DATE('" . $diafin . "' , '%d-%m-%Y %H:%i:%s') ORDER by fecha";
+  // $misql = "SELECT DATE_FORMAT(fecha,'%d') as dfecha FROM numapuesta WHERE fecha >= STR_TO_DATE('" . $diaini . "' , '%d-%m-%Y %H:%i:%s') and  fecha <= STR_TO_DATE('" . $diafin . "' , '%d-%m-%Y %H:%i:%s') ORDER by fecha";
   $misql = "SELECT DATE_FORMAT(fecha,'%d') as dfecha FROM numapuesta WHERE fecha >= STR_TO_DATE('" . $diaini . "' , '%d-%m-%Y %H:%i:%s') and  fecha <= STR_TO_DATE('" . $diafin . "' , '%d-%m-%Y %H:%i:%s') ORDER by fecha";
   $datos = consulta($misql);
 
