@@ -31,26 +31,21 @@ function obtener_calendario(&$fecmes, &$fecano)
   $diafin = convierte_fecha($diafin, "d-m-Y") . " 00:00:00";
 
   // Leer los días con sorteo del mes.
-  // $misql = "SELECT DATE_FORMAT(fecha,'%d') as dfecha FROM numapuesta WHERE fecha >= STR_TO_DATE('" . $diaini . "' , '%d-%m-%Y %H:%i:%s') and  fecha <= STR_TO_DATE('" . $diafin . "' , '%d-%m-%Y %H:%i:%s') ORDER by fecha";
   $misql = "SELECT DATE_FORMAT(fecha,'%d') as dfecha FROM numapuesta WHERE fecha >= STR_TO_DATE('" . $diaini . "' , '%d-%m-%Y %H:%i:%s') and  fecha <= STR_TO_DATE('" . $diafin . "' , '%d-%m-%Y %H:%i:%s') ORDER by fecha";
   $datos = consulta($misql);
 
   while ($myrow = fetch_array($datos)) {
-
-    //$dia_base = date('d', strtotime($myrow['fecha']));
-    //$datos_apuestas = obtener_apuestas($myrow);
-
     $dias_sorteo[] =  $myrow['dfecha'];
   }
 
-
+  //if (!$app_prod) {
   //echo "<br><pre><code>";
   //while ($myrow = fetch_array($datos)) {
   //  echo $myrow['dfecha'] . "<br>";
   //}
   //echo print_r($dias_sorteo);
   //echo "</code></pre><br>";
-
+  //}
 
   // Generamos el calendario.
   // Primer día del mes.
@@ -142,14 +137,14 @@ function obtener_select_meses($mes = 0)
 function obtener_select_anos($ano)
 {
 
-  global $rangoanoini, $rangoanofin;
+  global $app_rangoanoini, $app_rangoanofin;
 
   $valores = "";
   if ($ano === 0) {
     $ano = date("Y", time());
   }
 
-  for ($i = $rangoanoini; $i <= $rangoanofin; $i++) {
+  for ($i = $app_rangoanoini; $i <= $app_rangoanofin; $i++) {
 
     $valores .= '<option value="' . $i . '"';
     if ($ano == $i) {

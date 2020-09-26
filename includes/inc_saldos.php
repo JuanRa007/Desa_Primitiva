@@ -1,9 +1,6 @@
 <?php
 $fecha_ult = obtener_saldos_fecha();
 $saldos_part = obtener_saldos();
-
-//var_dump($saldos_part);
-
 ?>
 
 <!-- Nuestras apuestas -->
@@ -49,11 +46,10 @@ $saldos_part = obtener_saldos();
                 }
 
                 $clase_celda = "";
-                if ($saldo <= $saldominimo) {
+                if ($saldo <= $app_saldominimo) {
                   $clase_celda = "table-danger";
                 }
 
-                //echo $participante . "-" . $saldo . "-" . $fecha . "<br>";
               ?>
                 <tr <?= ($clase) ? $clase : "" ?>>
                   <td><?= $participante ?></td>

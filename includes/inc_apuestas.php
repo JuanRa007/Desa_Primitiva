@@ -5,10 +5,8 @@ $fecha_apu = convierte_fecha($apuesta['fecha']);
 $fecha_diff = 0;
 
 $datos_apuestas = obtener_apuestas($apuesta);
-//$primitiva_fija = $datos_apuestas["primifija"];
-//$primitiva_sema = $datos_apuestas["primisema"];
 
-
+//if (!$app_prod) {
 //echo "<br>";
 //echo print_r($datos_apuestas);
 //echo "<br>";
@@ -19,6 +17,7 @@ $datos_apuestas = obtener_apuestas($apuesta);
 
 //echo "REGISTRO:" . print_r($datos_apuestas['primifija']) . "<br>";
 //exit();
+//}
 ?>
 
 <!-- Nuestras apuestas -->
@@ -57,8 +56,6 @@ $datos_apuestas = obtener_apuestas($apuesta);
       <!-- ======= INICIO ======= -->
       <?php
       foreach ($datos_apuestas as $indice => $mi_apuesta) {
-
-        //echo "INDICE :" . $indice;
         $apuesta = $mi_apuesta[0];
       ?>
 

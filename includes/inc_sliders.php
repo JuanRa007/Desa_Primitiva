@@ -16,13 +16,16 @@
     -->
 <?php
 
-
-
+// tamaño total: $frases_sliders_tam
+if (!$app_prod) {
+  echo "<br><br><br><br><br>";
+  echo "RANDOM [$frases_sliders_tam]=>" . $frases_sliders[random_int(0, $frases_sliders_tam)] . "]";
+  echo "<br><br><br><br><br>";
+}
 ?>
 
-
 <section id="avisos">
-  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+  <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
       <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -56,7 +59,7 @@
         </div>
       </div>
 
-      <!-- Aviso segundo -->
+      <!-- Aviso tercero -->
       <div class="carousel-item avisos-img-loteria">
         <div class="container">
           <div class="carousel-caption text-center mb-5 text-white">

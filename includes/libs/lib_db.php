@@ -1,13 +1,11 @@
 <?php
 
 /* CONNECTION INSTANCE */
-$connection = new mysqli($host, $user, $pass, $dbname);
+$connection = new mysqli($app_host, $app_user, $app_pass, $app_dbname);
 
 if ($connection->connect_errno) {
   echo "Fallo al conectar a MySQL: (" . $connection->connect_errno . ") " . $connection->connect_error;
 }
-
-/* printf("Conjunto de caracteres inicial: %s\n", mysqli_character_set_name($connection)); */
 
 /* cambiar el conjunto de caracteres a utf8 */
 if (!mysqli_set_charset($connection, "utf8")) {

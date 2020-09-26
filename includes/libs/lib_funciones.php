@@ -19,7 +19,6 @@ function leer_apuesta_dia($fecha_dia = "")
   } else {
     $misql = "SELECT * FROM numapuesta order by fecha desc LIMIT 1";
   }
-  //$misql = escape($misql);
   $datos = consulta($misql);
   $row = fetch_array($datos);
 
@@ -39,10 +38,19 @@ function obtener_nombre_mes($mes)
   return $lit_meses[$mes];
 }
 
+// Obtenemos el literal del día de hoy.
+function obtener_nombre_dia($dia)
+{
+
+  // Días
+  $lit_meses = array("Mon" => "lunes", "Tue" => "martes", "Wed" => "miércoles", "Thu" => "jueves", "Fri" => "viernes", "Sat" => "sábado", "Sun" => "domingo",);
+
+  return $lit_meses[$dia];
+}
+
 // Devolvemos el literal del mes y año.
 function obtener_nombre_mes_ano($mes, $ano)
 {
-
 
   // Control
   $mes = intval($mes);
@@ -124,7 +132,6 @@ function obtener_saldos_fecha()
   $row = fetch_array($datos);
 
   if ($row) {
-    //$fecha_base = date("d/m/Y", strtotime($row['totfecha']));
     $fecha_base = convierte_fecha($row['totfecha']);
   }
 
@@ -151,23 +158,13 @@ function obtener_saldos()
   foreach ($datos as $participante) {
 
     $persona_saldo = $participante['participante'];
-    //echo $persona_saldo . "<br>";
 
     $misql1 = "SELECT SUM(importe) as totsaldo, MAX(fecha) as totfecha FROM aportaciones WHERE participante = '$persona_saldo'";
     $datos1 = consulta($misql1);
     $row1 = fetch_array($datos1);
-
     $importe_saldo = $row1['totsaldo'];
     $fecha_saldo = $row1['totfecha'];
-
-    // $e=array[];
-    // $e['totparti']=$persona_saldo;
-    // $e['totsaldo']=$importe_saldo;
-    // $e['totfecha']=$fecha_saldo;
-    // $array_saldos[] = $e;
-
     $array_saldos[] = [$persona_saldo, $importe_saldo, $fecha_saldo];
-
     $cestillo_saldo += $importe_saldo;
   }
 
@@ -272,8 +269,6 @@ function obtener_fecha_sorteo($tipo, $fecha)
       } else {
         $fecha_new = convierte_fecha($fecha);
       }
-      //echo "Dia Semana ["  . $fecha . "---" . $fecha_ant . "] => " . $diasemana . ".<br>";
-      //exit();
       $fechas_proceso[] = $fecha_new;
 
       // Ahora el sábado siguiente.
@@ -334,8 +329,6 @@ function obtener_fecha_sorteo($tipo, $fecha)
       } else {
         $fecha_new = convierte_fecha($fecha);
       }
-      //echo "Dia Semana ["  . $fecha . "---" . $fecha . "] => " . $diasemana . ".<br>";
-      //exit();
       $fechas_proceso[] = $fecha_new;
 
       // Ahora el viernes siguiente.
@@ -346,7 +339,6 @@ function obtener_fecha_sorteo($tipo, $fecha)
       break;
 
     default:
-      # code...
       break;
   }
 
@@ -362,7 +354,6 @@ function obtener_numeros_sorteo($numeros)
 
   // Como separador de las apuestas está el carécter "/"
   $series_num = explode("/", $numeros);
-  //echo "Serie_NUM:" . print_r($series_num) . "<br>";
 
   foreach ($series_num as $serie) {
     //echo "Serie:" . trim($serie) . "<br>";
@@ -385,6 +376,7 @@ function obtener_numeros_sorteo($numeros)
 // en el registro pasado.
 function obtener_apuestas($registro)
 {
+  global $app_prod;
 
   // Inicializamos los valores.
   $mis_apuestas = [];
@@ -426,24 +418,27 @@ function obtener_apuestas($registro)
     // Euromillón: sólo viernes, sólo martes, semanal.
     $reg_marvie = $registro['marvie'];
 
+
     //===================================================
     /*
-    echo $reg_fecha . "<br>";
-    echo $reg_numfijo . "<br>";
-    echo $reg_numfijor . "<br>";
-    echo $reg_numvari . "<br>";
-    echo $reg_numvarir . "<br>";
-    echo $reg_euromillon . "<br>";
-    echo $reg_euroruno . "<br>";
-    echo $reg_eurordos . "<br>";
-    echo $reg_otros . "<br>";
-    echo $reg_euromillon1 . "<br>";
-    echo $reg_euroruno1 . "<br>";
-    echo $reg_eurordos1 . "<br>";
-    echo $reg_numvari1 . "<br>";
-    echo $reg_numvari1r . "<br>";
-    echo $reg_premio . "<br>";
-    echo $reg_marvie . "<br>";
+    if (!$app_prod) {
+      echo $reg_fecha . "<br>";
+      echo $reg_numfijo . "<br>";
+      echo $reg_numfijor . "<br>";
+      echo $reg_numvari . "<br>";
+      echo $reg_numvarir . "<br>";
+      echo $reg_euromillon . "<br>";
+      echo $reg_euroruno . "<br>";
+      echo $reg_eurordos . "<br>";
+      echo $reg_otros . "<br>";
+      echo $reg_euromillon1 . "<br>";
+      echo $reg_euroruno1 . "<br>";
+      echo $reg_eurordos1 . "<br>";
+      echo $reg_numvari1 . "<br>";
+      echo $reg_numvari1r . "<br>";
+      echo $reg_premio . "<br>";
+      echo $reg_marvie . "<br>";
+    }
     */
     //===================================================
 
@@ -482,6 +477,7 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
 
   // Incializar variable a devolver.
   $apuesta_fija = [];
+  $imp_premio = 0;
 
   // numeros => 03-13-23-32-33-43 / 09-17-19-29-39-49
   if ($fecha && isset($fecha) && $numeros && isset($numeros) && $reintegro && isset($reintegro)) {
@@ -494,21 +490,13 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
     // Buscar el jueves y sábado de la fecha indicada.
     $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
 
-    //echo "<br>";
-    //echo print_r($fecha_juesab);
-    //echo "<br>";
-
     // Obtener apuestas.
     $num_sorteo = obtener_numeros_sorteo($numeros);
     $reintegros = [$reintegro, $reintegro];
 
-    //echo "<br>";
-    //echo print_r($num_sorteo);
-    //echo "<br>";
-
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Fija Semanal",
-      'subtitulo'  => "Martes y Jueves",
+      'subtitulo'  => "Jueves y Sábado",
       'color'      => "bg-success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
@@ -546,7 +534,7 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
 
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Semanal",
-      'subtitulo'  => "Martes y Jueves",
+      'subtitulo'  => "Jueves y Sábado",
       'color'      => "bg-success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
@@ -625,6 +613,8 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
 /////////////////////////////////////
 function prepara_bloque_otros($fecha, $otros)
 {
+  global $app_prod;
+
   // Incializar variable a devolver.
   $apuesta_fija = [];
   // Separador.
@@ -632,7 +622,9 @@ function prepara_bloque_otros($fecha, $otros)
 
   if ($fecha && isset($fecha) && $otros && isset($otros)) {
 
-    echo "----> Otros:" . $otros . "<br><br>";
+    if (!$app_prod) {
+      echo "----> Otros:" . $otros . "<br><br>";
+    }
 
     // Trabajamos con una copia.
     $otros_bak = $otros;
@@ -649,15 +641,14 @@ function prepara_bloque_otros($fecha, $otros)
         $otros_bak = "";
       }
 
-      //echo "----> StrMirar: [" . $strmirar . "]<br><br>";
-      //echo "----> Otros_Bak: [" . $otros_bak . "]<br><br>";
-
       // Buscamos Euromillones.
       $pos1 = stripos($strmirar, "Euromillón");
       if ($pos1 !== false) {
 
         // Preparamos Euromillones.
-        echo "---------------------> [ EUROMILLONES ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ EUROMILLONES ]<br>";
+        }
         // prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $euromillon1, $euroruno1, $eurordos1, $marvie)
 
         // Limpiamos la cadena de trabajo.
@@ -671,7 +662,9 @@ function prepara_bloque_otros($fecha, $otros)
       if ($pos1 !== false) {
 
         // Preparamos Bonoloto.
-        echo "---------------------> [ BONOLOTO ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ BONOLOTO ]<br>";
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
@@ -684,7 +677,9 @@ function prepara_bloque_otros($fecha, $otros)
       if ($pos1 !== false) {
 
         // Preparamos El Gordo.
-        echo "---------------------> [ EL GORDO ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ EL GORDO ]<br>";
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
@@ -697,7 +692,9 @@ function prepara_bloque_otros($fecha, $otros)
       if ($pos1 !== false) {
 
         // Preparamos Décimo.
-        echo "---------------------> [ DÉCIMO ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ DÉCIMO ]<br>";
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
@@ -710,7 +707,9 @@ function prepara_bloque_otros($fecha, $otros)
       if ($pos1 !== false) {
 
         // Preparamos Once.
-        echo "---------------------> [ ONCE ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ ONCE ]<br>";
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
@@ -723,7 +722,9 @@ function prepara_bloque_otros($fecha, $otros)
       if ($pos1 !== false) {
 
         // Preparamos PrimitivaE.
-        echo "---------------------> [ PRIMITIVAE ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ PRIMITIVAE ]<br>";
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
@@ -736,16 +737,22 @@ function prepara_bloque_otros($fecha, $otros)
       if ($pos1 !== false) {
 
         // Preparamos Aviso.
-        echo "---------------------> [ AVISO ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ AVISO ]<br>";
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // Aviso
 
+
+
       // Buscamos Desconocido
       if ($strmirar) {
         // Preparamos Desconocido.
-        echo "---------------------> [ DESCONOCIDO ]<br>";
+        if (!$app_prod) {
+          echo "---------------------> [ DESCONOCIDO ]<br>";
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";

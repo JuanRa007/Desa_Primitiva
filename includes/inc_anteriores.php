@@ -60,6 +60,7 @@ if ($mes_pos > 12) {
 $enlace_mes_ant = "anteriores.php?messel=" . $mes_ant . "&anosel=" . $ano_ant;
 $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
 
+//if (!$app_prod;) {
 //echo "<br><pre><code>";
 //while ($myrow = fetch_array($datos)) {
 //  echo $myrow['dfecha'] . "<br>";
@@ -68,8 +69,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
 //echo print_r($datos_apuestas);
 //echo "</code></pre><br>";
 //exit();
-
-
+//}
 ?>
 
 <!-- Nuestras apuestas -->
@@ -203,32 +203,31 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
 
       <?php
       // Recorremos todos las apuestas obtenidas.
-      foreach ($datos_apuestas as $apuesta => $apuestas) {
-        echo "APUESTA: " . $apuesta . "<br>";
-        foreach ($apuestas as $indice => $valores) {
-          echo "--> Indice: [" . $indice . "] --- >> [<br>";
-          foreach ($valores as $j => $valor) {
-            # code...
-            echo "----> J: {" . $j . "} -> {";
-            if (is_array($valor)) {
-              echo implode(" = ", $valor);
-            } else {
-              echo $valor;
+      if (!$app_prod) {
+        foreach ($datos_apuestas as $apuesta => $apuestas) {
+          echo "APUESTA: " . $apuesta . "<br>";
+          foreach ($apuestas as $indice => $valores) {
+            echo "--> Indice: [" . $indice . "] --- >> [<br>";
+            foreach ($valores as $j => $valor) {
+              # code...
+              echo "----> J: {" . $j . "} -> {";
+              if (is_array($valor)) {
+                echo print_r($valor);
+              } else {
+                echo $valor;
+              }
+              echo "}<br>";
             }
-            echo "}<br>";
+            echo "] << --- (Fin Indice)<br><br>";
           }
-          echo "] << --- (Fin Indice)<br><br>";
+          echo "<hr>";
         }
-        echo "<hr>";
       }
       ?>
-
       <!--     RESTO -->
     <?php
     }
     ?>
-
-
 
   </div>
 </section>
