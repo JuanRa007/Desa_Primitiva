@@ -45,5 +45,5 @@ function consulta($query)
 function fetch_array($result)
 {
 
-  return mysqli_fetch_array($result);
+  return mysqli_fetch_array($result, MYSQLI_ASSOC);
 }

@@ -1,4 +1,4 @@
-<section id="apuestas" class="bg-light pb-5">
+<section id="apuestas" class="bg-light pt-5">
   <div class="container text-center pt-5">
 
     <div class="jumbotron">

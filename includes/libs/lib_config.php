@@ -1,7 +1,7 @@
 <?php
 
 /* TEST O PRODUCTIVO */
-$app_prod = true;
+$app_prod = false;
 
 /* APP NOMBRE */
 $app_name = "Nuestras Apuestas BETA";
@@ -9,8 +9,13 @@ $app_name = "Nuestras Apuestas BETA";
 /* DATABASE CONFIGURATION */
 $app_host = 'localhost';
 $app_user = 'primitiva';
-$app_pass = 'primitiva';
-$app_dbname = 'primitiva';
+if ($app_prod) {
+  $app_pass = 'Primitiva1967&';                   //'primitiva';
+  $app_dbname = 'nuestrasapuestas_es_primitiva';  //'primitiva';
+} else {
+  $app_pass = 'primitiva';
+  $app_dbname = 'primitiva';
+}
 
 /* MENU CONFIGURATION */
 $act_pagina = basename($_SERVER['PHP_SELF']);

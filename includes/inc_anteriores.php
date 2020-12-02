@@ -74,7 +74,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
 
 <!-- Nuestras apuestas -->
 
-<section id="anteriores" class="bg-light pb-5">
+<section id="anteriores" class="bg-light pt-5">
   <div class="container text-center pt-5">
     <div class="row">
       <div class="col">

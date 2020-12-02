@@ -480,7 +480,8 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
   $imp_premio = 0;
 
   // numeros => 03-13-23-32-33-43 / 09-17-19-29-39-49
-  if ($fecha && isset($fecha) && $numeros && isset($numeros) && $reintegro && isset($reintegro)) {
+  // if ($fecha && isset($fecha) && $numeros && isset($numeros) && $reintegro && isset($reintegro)) {
+  if ($fecha && isset($fecha) && $numeros && isset($numeros) && isset($reintegro)) {
 
     // Premio.
     if ($premio && isset($premio)) {
@@ -616,14 +617,14 @@ function prepara_bloque_otros($fecha, $otros)
   global $app_prod;
 
   // Incializar variable a devolver.
-  $apuesta_fija = [];
+  $apuesta_otros = [];
   // Separador.
   $text_separador = "--------";
 
   if ($fecha && isset($fecha) && $otros && isset($otros)) {
 
     if (!$app_prod) {
-      echo "----> Otros:" . $otros . "<br><br>";
+      echo "----> Otros: " . $otros . "<br><br>";
     }
 
     // Trabajamos con una copia.
@@ -649,7 +650,27 @@ function prepara_bloque_otros($fecha, $otros)
         if (!$app_prod) {
           echo "---------------------> [ EUROMILLONES ]<br>";
         }
-        // prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $euromillon1, $euroruno1, $eurordos1, $marvie)
+
+        // Ahora tenemos un string con apuestas de euromillones.
+        // Puede haber varias fechas, puede haber varias apuestas.
+        $otro_fecha = f_otros_fechas($strmirar);
+        $otro_euromillon = "";
+        $otro_euroruno = "";
+        $otro_eurordos = "";
+        $otro_euromillon1 = "";
+        $otro_euroruno1 = "";
+        $otro_eurordos1 = "";
+        $otro_marvie = "";
+
+
+
+
+
+
+        $mi_apuesta = prepara_euromillones_vari($otro_fecha, $otro_euromillon, $otro_euroruno, $otro_eurordos, $otro_euromillon1, $otro_euroruno1, $otro_eurordos1, $otro_marvie);
+        if ($mi_apuesta) {
+          $mis_apuestas['euromvari'] = $mi_apuesta;
+        }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
@@ -762,5 +783,26 @@ function prepara_bloque_otros($fecha, $otros)
     }   // end while
   }
 
-  return $apuesta_fija;
+  return $apuesta_otros;
+}
+
+/*
+/  Obtiene las fechas entre paréntesis
+/ 
+/   Formato:
+/   Euromillón (24/11/2020): 05-09-28-29-50 R.06-08 / 03-13-17-36-44 R.05-06 / 01-15-19-45-38 R.01-03 / 20-22-23-28-29 R.03-11 / 04-17-19-44-50 R.04-07 / 01-05-24-40-50 R.06-08
+/   Euromillón (30/06/2020 - 03/07/2020):
+/
+*/
+function f_otros_fechas($strapuesta)
+{
+  // Buscamos el primer paréntesis
+  $posa = stripos($strapuesta, "(");
+  $posc = stripos($strapuesta, ")");
+  $poslen = $posc - $posa - 1;
+
+  $strfecha = substr($strapuesta, $posa + 1, $poslen);
+  echo "FECHA: [" . $strfecha . "]<br><br><br>";
+  echo "FECHA ==> [" . convierte_fecha(substr($strfecha, 6, 4) . substr($strfecha, 3, 2) . substr($strfecha, 0, 2)) . "]<br><br><br>";
+  exit();
 }

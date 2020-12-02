@@ -17,11 +17,11 @@
 <?php
 
 // tamaño total: $frases_sliders_tam
-if (!$app_prod) {
-  echo "<br><br><br><br><br>";
-  echo "RANDOM [$frases_sliders_tam]=>" . $frases_sliders[random_int(0, $frases_sliders_tam)] . "]";
-  echo "<br><br><br><br><br>";
-}
+//if (!$app_prod) {
+//  echo "<br><br><br><br><br>";
+//  echo "RANDOM [$frases_sliders_tam]=>" . $frases_sliders[random_int(0, $frases_sliders_tam)] . "]";
+//  echo "<br><br><br><br><br>";
+//}
 ?>
 
 <section id="avisos">
@@ -33,8 +33,21 @@ if (!$app_prod) {
     </ol>
 
     <div class="carousel-inner">
+
+      <!-- Aviso Inicial -->
+      <div class="carousel-item avisos-img-mensa active">
+        <div class="container">
+          <div class="carousel-caption text-right mb-5 text-white">
+            <h1 class="display-4">Para pensar</h1>
+            <p class="lead">
+              <?= $frases_sliders[random_int(0, $frases_sliders_tam)] ?>
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!-- Aviso primero -->
-      <div class="carousel-item avisos-img-primitiva active">
+      <div class="carousel-item avisos-img-primitiva">
         <div class="container">
           <div class="carousel-caption text-right mb-5 text-white">
             <h1 class="display-4">Primer Aviso</h1>

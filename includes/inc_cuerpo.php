@@ -1,11 +1,11 @@
 <!-- Cuerpo de página -->
 <?php
 
-/* Sliders */
-require_once("./includes/inc_sliders.php");
-
 switch ($act_pagina) {
   case 'index.php':
+    /* Sliders */
+    require_once("./includes/inc_sliders.php");
+
     /* Apuestas */
     require_once("./includes/inc_apuestas.php");
     break;

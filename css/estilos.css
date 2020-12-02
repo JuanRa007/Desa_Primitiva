@@ -130,6 +130,10 @@ ul > a:hover {
 }
 
 /* Imágenes de fondo para los avisos */
+.avisos-img-mensa {
+	background: url('./../img/avi_mensa.jpg');
+	background-size: cover;
+}
 .avisos-img-primitiva {
 	background: url('./../img/avi_bolas.jpg');
 	background-size: cover;
