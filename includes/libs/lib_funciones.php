@@ -214,7 +214,7 @@ function genera_texto_importe($premio)
 
 
 // Obtenie los valores para las fechas del euromillon.
-function obtener_valor_marvie($marvie)
+function obtener_valor_marvie($marvie, &$subtitul)
 {
 
   $tipo_fecha = "";
@@ -226,9 +226,11 @@ function obtener_valor_marvie($marvie)
   switch ($marvie) {
     case 'V':
       $tipo_fecha = "diavie";
+      $subtitul   = "Viernes";
       break;
     case 'M':
       $tipo_fecha = "diamar";
+      $subtitul   = "Martes";
       break;
     default:
       $tipo_fecha = "marvie";
@@ -418,7 +420,6 @@ function obtener_apuestas($registro)
     // Euromillón: sólo viernes, sólo martes, semanal.
     $reg_marvie = $registro['marvie'];
 
-
     //===================================================
     /*
     if (!$app_prod) {
@@ -444,7 +445,6 @@ function obtener_apuestas($registro)
 
     // Prepara $reg_numfijo
     $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor, $reg_premio);
-
     if ($mi_apuesta) {
       $mis_apuestas['primifija'] = $mi_apuesta;
     }
@@ -463,6 +463,11 @@ function obtener_apuestas($registro)
 
     // Prepara $reg_otros
     $mi_apuesta = prepara_bloque_otros($reg_fecha, $reg_otros);
+    if ($mi_apuesta) {
+      foreach ($mi_apuesta as $otro_tipo => $otro_apuesta) {
+        $mis_apuestas[$otro_tipo] = $otro_apuesta;
+      }
+    }
   }
 
   return $mis_apuestas;
@@ -557,28 +562,53 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
 
   // Incializar variable a devolver.
   $apuesta_fija = [];
+  $fecha_pro = "";
+  $strsubtitulo = "Martes y Viernes";
+
   // Controlar "marvie"
-  $tipo_fecha = obtener_valor_marvie($marvie);
+  $tipo_fecha = obtener_valor_marvie($marvie, $strsubtitulo);
 
   if ($fecha && isset($fecha) && $euromillon && isset($euromillon) && $euroruno && isset($euroruno) && $eurordos && isset($eurordos)) {
 
-    // Buscar el jueves y sábado de la fecha indicada.
-    $fecha_marvie = obtener_fecha_sorteo($tipo_fecha, $fecha);
+    // Buscar el martes y viernes de la fecha indicada.
+    // En "$fecha" nos puede llegar una tabla.
+    if (is_array($fecha)) {
+      $fecha_pro = $fecha[0];
+    } else {
+      $fecha_pro = $fecha;
+    }
+    $fecha_marvie = obtener_fecha_sorteo($tipo_fecha, $fecha_pro);
 
     // Formateamos los reintegros a dos números.
-    $euroruno = number_format($euroruno, 0, ',', '.');
-    if (strlen($euroruno) == 1) {
-      $euroruno = '0' . $euroruno;
+    // En "$euromillon"/"$euroruno"/"$eurordos" nos pueden llegar una tabla.
+    if (is_array($euroruno)) {
+      $euromillon_pro = "";
+      for ($i = 0; $i < count($euroruno); $i++) {
+        $reintegros[] = $euroruno[$i] . " - " . $eurordos[$i];
+      }
+      for ($i = 0; $i < count($euromillon); $i++) {
+        if ($i < 1) {
+          $euromillon_pro = $euromillon[$i];
+        } else {
+          $euromillon_pro = $euromillon_pro . " / " . $euromillon[$i];
+        }
+      }
+    } else {
+      $euromillon_pro =  $euromillon;
+      $euroruno = number_format($euroruno, 0, ',', '.');
+      if (strlen($euroruno) == 1) {
+        $euroruno = '0' . $euroruno;
+      }
+      $eurordos = number_format($eurordos, 0, ',', '.');
+      if (strlen($eurordos) == 1) {
+        $eurordos = '0' . $eurordos;
+      }
+      $reintegros[] = $euroruno . " - " . $eurordos;
     }
-    $eurordos = number_format($eurordos, 0, ',', '.');
-    if (strlen($eurordos) == 1) {
-      $eurordos = '0' . $eurordos;
-    }
-    $reintegros[] = $euroruno . " - " . $eurordos;
 
     // Obtener apuestas.
     if ($euromillon1 && isset($euromillon1) && $euroruno1 && isset($euroruno1) && $eurordos1 && isset($eurordos1)) {
-      $euromillon = $euromillon . " / " . $euromillon1;
+      $euromillon_pro =  $euromillon_pro . " / " . $euromillon1;
       // Formateamos los reintegros a dos números.
       $euroruno1 = number_format($euroruno1, 0, ',', '.');
       if (strlen($euroruno1) == 1) {
@@ -588,14 +618,12 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
       if (strlen($eurordos1) == 1) {
         $eurordos1 = '0' . $eurordos1;
       }
-
       $reintegros[] = $euroruno1 . " - " . $eurordos1;
     }
-    $num_sorteo = obtener_numeros_sorteo($euromillon);
-
+    $num_sorteo = obtener_numeros_sorteo($euromillon_pro);
     $apuesta_fija[] = [
       'titulo'     => "Euromillones",
-      'subtitulo'  => "Martes y Viernes",
+      'subtitulo'  => $strsubtitulo,
       'color'      => "bg-primary",
       'fechas'     => $fecha_marvie,
       'imagen'     => "b_euromillones.png",
@@ -608,6 +636,42 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
 
   return $apuesta_fija;
 }
+
+/////////////////////////////////////
+// Prepara para el valor "Décimo"  //
+/////////////////////////////////////
+function prepara_decimo_fijo($cadena)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+  $afechas_decimo = [];
+
+  // Comprobamos que nos llega algo.
+  if ($cadena && isset($cadena)) {
+
+    // Obtenemos la fecha del sorteo.
+    $afechas_decimo = f_otros_fechas($cadena);
+    $fecha_sorteo = convierte_fecha($afechas_decimo[0]);
+    $num_sorteo = f_otros_decimo($cadena);
+    $reintegros = f_otros_serie_fraccion($cadena); // Serie - Fracción
+
+    $apuesta_fija[] = [
+      'titulo'     => "Lotería Nacional",
+      'subtitulo'  => "Sorteo de Navidad",
+      'color'      => "bg-info",
+      'fechas'     => $fecha_sorteo,
+      'imagen'     => "b_loteria.png",
+      'icono'      => "icon-LoteriaNacionalAJ",
+      'numeros'    => $num_sorteo,
+      'reintegros' => $reintegros,
+      'premio'     => ""
+    ];
+  }
+
+  return $apuesta_fija;
+}
+
 
 /////////////////////////////////////
 // Prepara el campo bloque "otros" //
@@ -643,6 +707,7 @@ function prepara_bloque_otros($fecha, $otros)
       }
 
       // Buscamos Euromillones.
+      //=======================
       $pos1 = stripos($strmirar, "Euromillón");
       if ($pos1 !== false) {
 
@@ -651,34 +716,68 @@ function prepara_bloque_otros($fecha, $otros)
           echo "---------------------> [ EUROMILLONES ]<br>";
         }
 
+        // Inicializamos.
+        $mi_apuesta = [];
+
         // Ahora tenemos un string con apuestas de euromillones.
         // Puede haber varias fechas, puede haber varias apuestas.
         $otro_fecha = f_otros_fechas($strmirar);
-        $otro_euromillon = "";
-        $otro_euroruno = "";
-        $otro_eurordos = "";
+        $otro_euromillon = f_otros_numeuro($strmirar, $otro_euroruno, $otro_eurordos);
         $otro_euromillon1 = "";
         $otro_euroruno1 = "";
         $otro_eurordos1 = "";
-        $otro_marvie = "";
-
-
-
-
-
-
+        $otro_marvie = f_otros_marvie($otro_fecha);
         $mi_apuesta = prepara_euromillones_vari($otro_fecha, $otro_euromillon, $otro_euroruno, $otro_eurordos, $otro_euromillon1, $otro_euroruno1, $otro_eurordos1, $otro_marvie);
         if ($mi_apuesta) {
-          $mis_apuestas['euromvari'] = $mi_apuesta;
+          $apuesta_otros['otroeuromvari'] = $mi_apuesta;
         }
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
-      }   // Euromillones
+      }   // Euromillones - Fin
+
+
+      // Buscamos Décimo.
+      //=======================
+      $pos1 = stripos($strmirar, "Décimo");
+      if ($pos1 !== false) {
+
+        // Preparamos Décimo.
+        if (!$app_prod) {
+          echo "---------------------> [ DÉCIMO ]<br>";
+        }
+
+        // Inicializamos.
+        $mi_apuesta = [];
+
+        // Obtenemos los datos del décimo.
+        $mi_apuesta = prepara_decimo_fijo($strmirar);
+        if ($mi_apuesta) {
+          $apuesta_otros['lotnavidad'] = $mi_apuesta;
+        }
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Décimo - Fin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
       // Buscamos Bonoloto.
+      //=======================
       $pos1 = stripos($strmirar, "Bonoloto");
       if ($pos1 !== false) {
 
@@ -689,11 +788,12 @@ function prepara_bloque_otros($fecha, $otros)
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
-      }   // Bonoloto
+      }   // Bonoloto - Fin
 
 
 
       // Buscamos El Gordo.
+      //=======================
       $pos1 = stripos($strmirar, "El Gordo");
       if ($pos1 !== false) {
 
@@ -704,22 +804,7 @@ function prepara_bloque_otros($fecha, $otros)
 
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
-      }   // El Gordo
-
-
-
-      // Buscamos Décimo.
-      $pos1 = stripos($strmirar, "Décimo");
-      if ($pos1 !== false) {
-
-        // Preparamos Décimo.
-        if (!$app_prod) {
-          echo "---------------------> [ DÉCIMO ]<br>";
-        }
-
-        // Limpiamos la cadena de trabajo.
-        $strmirar = "";
-      }   // Décimo
+      }   // El Gordo - Fin
 
 
 
@@ -787,22 +872,133 @@ function prepara_bloque_otros($fecha, $otros)
 }
 
 /*
-/  Obtiene las fechas entre paréntesis
-/ 
+/   OTROS: Preparación de las apuestas de Euromillones
+/   ==================================================
+/
 /   Formato:
 /   Euromillón (24/11/2020): 05-09-28-29-50 R.06-08 / 03-13-17-36-44 R.05-06 / 01-15-19-45-38 R.01-03 / 20-22-23-28-29 R.03-11 / 04-17-19-44-50 R.04-07 / 01-05-24-40-50 R.06-08
 /   Euromillón (30/06/2020 - 03/07/2020):
 /
+/   1.- Fechas
 */
 function f_otros_fechas($strapuesta)
 {
+
+  // Inicializamos la variable a devolver.
+  $afechas = [];
+
   // Buscamos el primer paréntesis
   $posa = stripos($strapuesta, "(");
   $posc = stripos($strapuesta, ")");
   $poslen = $posc - $posa - 1;
+  $strfecha = trim(substr($strapuesta, $posa + 1, $poslen));
+  $aprefechas = explode('-', $strfecha);
 
-  $strfecha = substr($strapuesta, $posa + 1, $poslen);
-  echo "FECHA: [" . $strfecha . "]<br><br><br>";
-  echo "FECHA ==> [" . convierte_fecha(substr($strfecha, 6, 4) . substr($strfecha, 3, 2) . substr($strfecha, 0, 2)) . "]<br><br><br>";
-  exit();
+  // Tratamos cada fecha a formato de la aplicación.
+  foreach ($aprefechas as $key => $value) {
+    $afechas[] = substr($value, 6, 4) . "-" . substr($value, 3, 2) . "-" . substr($value, 0, 2) . " 00:00:00";
+  }
+  return $afechas;
+}
+
+/*
+/
+/   2.- Apuestas múltiples
+*/
+function f_otros_numeuro($strapuesta, &$strapureiuno, &$strapureidos)
+{
+
+  // Inicializamos la variable a devolver.
+  $anumbers = [];
+  $reintegros = [];
+  $strapureiuno = [];
+  $strapureidos = [];
+
+  // Buscamos el separador ":"
+  $posa = stripos($strapuesta, ":");
+  $strnumber = trim(substr($strapuesta, $posa + 1));
+  $aprenumbers = explode('/', $strnumber);
+
+  // Tratamos cada fecha a formato de la aplicación.
+  foreach ($aprenumbers as $key => $value) {
+    $preint = stripos($value, "R.");
+    $anumbers[] = trim(substr($value, 0, $preint - 1));
+    $reintegros = explode("-", trim(substr($value, $preint + 2)));
+    $strapureiuno[] =  $reintegros[0];
+    $strapureidos[] =  $reintegros[1];
+  }
+
+  return $anumbers;
+}
+
+/*
+/
+/   3.- Martes o Viernes o ambos en euromillon.
+*/
+function f_otros_marvie($afechas)
+{
+
+  // Inicializamos la variable a devolver.
+  $strtipo = "";
+
+  // Si nos vienen varias fechas es para los dos días.
+  if (count($afechas) > 1) {
+    $strtipo = "T";
+  } else {
+    $strtipo = "M";         // TODO: OJO... una fecha puede ser la del martes o del viernes.
+  }
+  return $strtipo;
+}
+
+/*
+/   OTROS: Preparación de las apuestas de Décimo
+/   ==================================================
+/
+/   Formato:
+/   Décimo (22/12/2019):
+/   77689  Série: 140ª  Fracción: 10ª
+/
+/   1.- Décimo
+*/
+function f_otros_decimo($strdecimo)
+{
+
+  // Inicializamos la variable a devolver.
+  $strnumber = "";
+
+  // Buscamos el separador ":"
+  $posa = stripos($strdecimo, ":");
+  $posb = stripos($strdecimo, "S");
+  $poslen = $posb - $posa - 1;
+  // Número del décimo.
+  $strnumber = trim(substr($strdecimo, $posa + 1, $poslen));
+
+  return $strnumber;
+}
+
+/*
+/
+/   2.- Serie - Fracción.
+*/
+function f_otros_serie_fraccion($strdecimo)
+{
+  // Inicializamos la variable a devolver.
+  $strnumber = "";
+  $strserie = "";
+  $strfraccion = "";
+
+  // Buscamos la serie
+  $posa = stripos($strdecimo, "rie:");
+  // Serie del décimo.
+  $strserie = trim(substr($strdecimo, $posa + 4, 6));
+
+  // Buscamos la fracción
+  $posa = stripos($strdecimo, "Fracción:");
+  // Serie del décimo.
+  $strfraccion = trim(substr($strdecimo, $posa + 10));
+
+  // Una vez obtenidos, los devolvemos como reintegros.
+  $strnumber = $strserie . " - " . $strfraccion;
+
+  return $strnumber;
 }

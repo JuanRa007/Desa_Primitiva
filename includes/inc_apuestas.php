@@ -6,18 +6,18 @@ $fecha_diff = 0;
 
 $datos_apuestas = obtener_apuestas($apuesta);
 
-//if (!$app_prod) {
-//echo "<br>";
-//echo print_r($datos_apuestas);
-//echo "<br>";
-//echo var_dump($datos_apuestas);
-//echo "<br>";
-//echo "<br>";
-//echo "TOTAL REGISTROS:" . count($datos_apuestas);
+/* if (!$app_prod) {
+  echo "<pre>";
+  // echo print_r($datos_apuestas);
+  echo "<br>";
+  echo var_dump($datos_apuestas);
+  echo "<br>";
+  echo "<br>";
+  echo "TOTAL REGISTROS:" . count($datos_apuestas);
 
-//echo "REGISTRO:" . print_r($datos_apuestas['primifija']) . "<br>";
-//exit();
-//}
+  //echo "REGISTRO:" . print_r($datos_apuestas['primifija']) . "<br>";
+  exit();
+} */
 ?>
 
 <!-- Nuestras apuestas -->
@@ -58,9 +58,7 @@ $datos_apuestas = obtener_apuestas($apuesta);
       foreach ($datos_apuestas as $indice => $mi_apuesta) {
         $apuesta = $mi_apuesta[0];
       ?>
-
         <!-- ======= INICIO ======= -->
-
         <div class="col mb-4">
           <div class="card text-black bg-light shadow">
             <img src="./img/<?= $apuesta["imagen"] ?>" class="card-img-top" alt="<?= $apuesta["titulo"] ?>">
@@ -76,9 +74,6 @@ $datos_apuestas = obtener_apuestas($apuesta);
               <div class="alert alert-success text-center" role="alert">
                 Sorteo: <span class="badge"><?= genera_texto_fecha($apuesta["fechas"]) ?></span>
               </div>
-
-              <!-- Pruebas con UL INLINE -->
-
               <?php
               $ind_rei = 0;
               $numeros_sorteo = $apuesta["numeros"];
@@ -119,15 +114,11 @@ $datos_apuestas = obtener_apuestas($apuesta);
             </div>
           </div>
         </div>
-
-
         <!-- ======= FINAL ======= -->
       <?php
       }
       ?>
       <!-- ======= FINAL ======= -->
-
-
 
     </div>
   </div>
