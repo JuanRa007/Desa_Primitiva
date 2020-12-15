@@ -1,8 +1,10 @@
 <?php
 
 $apuesta = leer_apuesta_dia();
+// Fecha apunte
 $fecha_apu = convierte_fecha($apuesta['fecha']);
-$fecha_diff = 0;
+// Fecha diferencias0
+$fecha_diff = fecha_diferencia($apuesta['fecha']);
 
 $datos_apuestas = obtener_apuestas($apuesta);
 
@@ -55,7 +57,7 @@ $datos_apuestas = obtener_apuestas($apuesta);
 
       <!-- ======= INICIO ======= -->
       <?php
-      foreach ($datos_apuestas as $indice => $mi_apuesta) {
+      foreach ($datos_apuestas as $tipo_apuesta => $mi_apuesta) {
         $apuesta = $mi_apuesta[0];
       ?>
         <!-- ======= INICIO ======= -->
@@ -71,45 +73,69 @@ $datos_apuestas = obtener_apuestas($apuesta);
                 <?= $apuesta["subtitulo"] ?>
               </h6>
               <hr />
-              <div class="alert alert-success text-center" role="alert">
+              <div class="alert <?= "alert-" . $apuesta["color"] ?> text-center" role="alert">
                 Sorteo: <span class="badge"><?= genera_texto_fecha($apuesta["fechas"]) ?></span>
               </div>
               <?php
-              $ind_rei = 0;
-              $numeros_sorteo = $apuesta["numeros"];
-              $reintegros_sorteo = $apuesta["reintegros"];
-              foreach ($numeros_sorteo as $indice => $numeros) {
+              if ($tipo_apuesta == 'lotnavidad') {
+                // Obtenemos la serie y la fracción.
+                $serie_fracc = explode('-', $apuesta["reintegros"]);
+                $decimo_frontal = obtener_nombre_fichero_decimo($apuesta["fechas"], true);
+                $decimo_trasera = obtener_nombre_fichero_decimo($apuesta["fechas"], false);
               ?>
-                <div class="d-flex justify-content-center">
-                  <ul class="list-inline text-monospace">
-
-                    <?php
-                    foreach ($numeros as $i => $num) {
-                    ?>
-                      <li class="list-inline-item p-1 mb-1 <?= $apuesta["color"] ?> rounded-circle shadow"><?= $num ?></li>
-                    <?php
-                    }
-                    if (strpos($reintegros_sorteo[$ind_rei], "-") > 0) {
-                      $rei_parcial = explode("-", $reintegros_sorteo[$ind_rei]);
-                    ?>
-                      <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $rei_parcial[0]; ?></li>
-                      <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $rei_parcial[1]; ?></li>
-                    <?php
-                    } else {
-                    ?>
-                      <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $reintegros_sorteo[$ind_rei] ?></li>
-                    <?php
-                    }
-                    ?>
-                  </ul>
+                <div class="alert text-center">
+                  <h1><?= $apuesta["numeros"] ?></h1>
+                  <h5>Serie: <span class="badge"><?= $serie_fracc[0] ?></span></h5>
+                  <h5>Fracción: <span class="badge"><?= $serie_fracc[1] ?></span></h5>
                 </div>
+                <div class="d-flex justify-content-center">
+                  <a href="<?= $decimo_frontal ?>" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
+                    <img src="<?= $decimo_frontal ?>" class="img-fluid" alt="">
+                  </a>
+                  <a href="<?= $decimo_trasera ?>" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
+                    <img src="<?= $decimo_trasera ?>" class="img-fluid" alt="">
+                  </a>
+                </div>
+                <?php
+              } else {
+                /* Inicio Contenido de la tarjeta: números */
+                $ind_rei = 0;
+                $numeros_sorteo = $apuesta["numeros"];
+                $reintegros_sorteo = $apuesta["reintegros"];
+                foreach ($numeros_sorteo as $indice => $numeros) {
+                ?>
+                  <div class="d-flex justify-content-center">
+                    <ul class="list-inline text-monospace">
+
+                      <?php
+                      foreach ($numeros as $i => $num) {
+                      ?>
+                        <li class="list-inline-item p-1 mb-1 <?= "bg-" . $apuesta["color"] ?> rounded-circle shadow"><?= $num ?></li>
+                      <?php
+                      }
+                      if (strpos($reintegros_sorteo[$ind_rei], "-") > 0) {
+                        $rei_parcial = explode("-", $reintegros_sorteo[$ind_rei]);
+                      ?>
+                        <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $rei_parcial[0]; ?></li>
+                        <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $rei_parcial[1]; ?></li>
+                      <?php
+                      } else {
+                      ?>
+                        <li class="list-inline-item p-1 mb-1 bg-warning rounded-circle shadow"><?= $reintegros_sorteo[$ind_rei] ?></li>
+                      <?php
+                      }
+                      ?>
+                    </ul>
+                  </div>
               <?php
-                $ind_rei += 1;
-              }
+                  $ind_rei += 1;
+                }
+                /* Fin Contenido de la tarjeta: números */
+              }   // if ($tipo_apuesta) 
               ?>
               <!-- Submensaje -->
               <p class="card-text">
-                <small class="text-muted">Actualizado hace <?= $fecha_diff ?> días.</small>
+                <small class="text-muted">Actualizado hace <?= $fecha_diff ?>.</small>
               </p>
             </div>
           </div>

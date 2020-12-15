@@ -82,7 +82,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
           <h1 class="text-dark pb-3">
             Historial de Apuestas
           </h1>
-          <p>Datos actualizados a fecha: <?= $fecha_apu ?></p>
+          <p>Última apuesta realizada: <?= $fecha_apu ?></p>
         </div>
       </div>
     </div>

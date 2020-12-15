@@ -80,6 +80,24 @@ function convierte_fecha($fecha_recibida, $formato = "d/m/Y")
   return date($formato, strtotime($fecha_recibida));
 }
 
+// 
+function fecha_diferencia($fecha_apuesta)
+{
+
+  // Incializamos.
+  $diferencia = 0;
+
+  // Convertimos la fecha pasada a formato para diff
+  $fecha_apu = convierte_fecha($fecha_apuesta, "Y-m-d");
+  $fecha_hoy = convierte_fecha(date("Y-m-d"), "Y-m-d");
+
+  // Restamos ambas fechas
+  $datetime_apu = date_create($fecha_apu);
+  $datetime_hoy = date_create($fecha_hoy);
+  $interval = date_diff($datetime_apu, $datetime_hoy);
+
+  return $interval->format('%R%a días');
+}
 
 // Ultimo día para el mes y año dado.
 function ultimo_dia_mes($fecmes, $fecano)
@@ -366,6 +384,26 @@ function obtener_numeros_sorteo($numeros)
   return $num_serie;
 }
 
+// Obtenemos el nombre y ubicación del fichero de decimo.
+function obtener_nombre_fichero_decimo($fecha, $fontral)
+{
+
+  // Definimos la ubicación.
+  $ubicacion = "decimos/";
+
+  // Tratamos la fecha: 22/12/2020
+  $nombre_fich = substr($fecha, 6, 4) . "-" . substr($fecha, 3, 2) . "-" . substr($fecha, 0, 2);
+
+  // Añadimos lo último
+  $nombre_fich = $ubicacion . $nombre_fich . "_decimo";
+  if ($fontral) {
+    $nombre_fich = $nombre_fich . "f.jpg";
+  } else {
+    $nombre_fich = $nombre_fich . "t.jpg";
+  }
+
+  return $nombre_fich;
+}
 
 /////////////////////////////
 //                         //
@@ -503,7 +541,7 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Fija Semanal",
       'subtitulo'  => "Jueves y Sábado",
-      'color'      => "bg-success",
+      'color'      => "success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
       'icono'      => "icon-PrimitivaAJ",
@@ -541,7 +579,7 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Semanal",
       'subtitulo'  => "Jueves y Sábado",
-      'color'      => "bg-success",
+      'color'      => "success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
       'icono'      => "icon-PrimitivaAJ",
@@ -557,13 +595,19 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
 /////////////////////////////////////
 // Prepara los campos "euromillon" //
 /////////////////////////////////////
-function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $euromillon1, $euroruno1, $eurordos1, $marvie)
+function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $euromillon1, $euroruno1, $eurordos1, $marvie, $especial = false)
 {
 
   // Incializar variable a devolver.
   $apuesta_fija = [];
   $fecha_pro = "";
+  $strtitulo = "Euromillones";
   $strsubtitulo = "Martes y Viernes";
+
+  // Controlar el título.
+  if ($especial) {
+    $strtitulo = "Euromillones Especial";
+  }
 
   // Controlar "marvie"
   $tipo_fecha = obtener_valor_marvie($marvie, $strsubtitulo);
@@ -622,9 +666,9 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
     }
     $num_sorteo = obtener_numeros_sorteo($euromillon_pro);
     $apuesta_fija[] = [
-      'titulo'     => "Euromillones",
+      'titulo'     => $strtitulo,
       'subtitulo'  => $strsubtitulo,
-      'color'      => "bg-primary",
+      'color'      => "primary",
       'fechas'     => $fecha_marvie,
       'imagen'     => "b_euromillones.png",
       'icono'      => "icon-EuromillonesAJ",
@@ -659,7 +703,7 @@ function prepara_decimo_fijo($cadena)
     $apuesta_fija[] = [
       'titulo'     => "Lotería Nacional",
       'subtitulo'  => "Sorteo de Navidad",
-      'color'      => "bg-info",
+      'color'      => "info",
       'fechas'     => $fecha_sorteo,
       'imagen'     => "b_loteria.png",
       'icono'      => "icon-LoteriaNacionalAJ",
@@ -727,7 +771,8 @@ function prepara_bloque_otros($fecha, $otros)
         $otro_euroruno1 = "";
         $otro_eurordos1 = "";
         $otro_marvie = f_otros_marvie($otro_fecha);
-        $mi_apuesta = prepara_euromillones_vari($otro_fecha, $otro_euromillon, $otro_euroruno, $otro_eurordos, $otro_euromillon1, $otro_euroruno1, $otro_eurordos1, $otro_marvie);
+        $otro_especial = true;
+        $mi_apuesta = prepara_euromillones_vari($otro_fecha, $otro_euromillon, $otro_euroruno, $otro_eurordos, $otro_euromillon1, $otro_euroruno1, $otro_eurordos1, $otro_marvie, $otro_especial);
         if ($mi_apuesta) {
           $apuesta_otros['otroeuromvari'] = $mi_apuesta;
         }
@@ -761,21 +806,6 @@ function prepara_bloque_otros($fecha, $otros)
       }   // Décimo - Fin
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       // Buscamos Bonoloto.
       //=======================
       $pos1 = stripos($strmirar, "Bonoloto");
@@ -789,6 +819,16 @@ function prepara_bloque_otros($fecha, $otros)
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // Bonoloto - Fin
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1001,4 +1041,63 @@ function f_otros_serie_fraccion($strdecimo)
   $strnumber = $strserie . " - " . $strfraccion;
 
   return $strnumber;
+}
+
+
+
+/////////////////////////////////////////////////
+//                                             //
+// Obtenemos los avisos para mostrar la inicio //
+//  de la pantalla inicial.                    //
+//                                             //
+/////////////////////////////////////////////////
+function obtener_avisos_entrada()
+{
+
+  // Accedemos a la tabla con las frases.
+  global $frases_sliders, $frases_sliders_tam;
+
+  // Inicializamos.
+  $aavisos = [];
+
+  // 1.- Obtenemos la frase del día
+  $frase_dia = $frases_sliders[random_int(0, $frases_sliders_tam)];
+  if (!$frase_dia) {
+    $frase_dia = $frases_sliders[0];
+  }
+  $aavisos[] = [
+    'titulo'     => "Para pensar",
+    'subtitulo'  => $frase_dia,
+    'imagen'     => "avisos-img-mensa",
+    'autor'      => "Desconocido"
+  ];
+
+  // 2.- Día del último sorteo premiado y el valor obtenido.
+  $misql = "SELECT fecha, premio FROM numapuesta WHERE premio > 0 ORDER BY fecha DESC LIMIT 1";
+  $datos = consulta($misql);
+  $row = fetch_array($datos);
+  mysqli_free_result($datos);
+  $frase_dia = "El pasado día " . convierte_fecha($row['fecha']) . " obtuvimos un premio de: " . number_format(sprintf("%01.2f", $row['premio']), 2, ',', '.');;
+  $aavisos[] = [
+    'titulo'     => "Último premio",
+    'subtitulo'  => $frase_dia,
+    'imagen'     => "avisos-img-primitiva",
+    'autor'      => ""
+  ];
+
+  // 3.- Saldo del bote.
+  $misql = "SELECT SUM(importe) as totsaldo, MAX(fecha) as totfecha FROM aportaciones WHERE participante = 'BOTE'";
+  $datos = consulta($misql);
+  $row = fetch_array($datos);
+  mysqli_free_result($datos);
+  $frase_dia = "Nuestro bote a día " . convierte_fecha($row['totfecha']) . " asciende a " . number_format(sprintf("%01.2f", $row['totsaldo']), 2, ',', '.');;
+  $aavisos[] = [
+    'titulo'     => "Nuestro Bote",
+    'subtitulo'  => $frase_dia,
+    'imagen'     => "avisos-img-euromillones",
+    'autor'      => ""
+  ];
+
+  // Devolvemos los valores obtenidos.
+  return $aavisos;
 }

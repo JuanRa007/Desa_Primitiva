@@ -1,9 +1,7 @@
 <!-- Slider Ultimos Avisos -->
 <!--  
       Posibles Avisos:
-      - Apuesta Fija (la primitiva)
-      - Apuesta secundaria (Euromillones o Primitiva)
-      - Premio obtenido en el último sorteo (si ha sido positivo)
+      - Último premio obtenido.
       - Saldo del bote
       - Otros avisos (¿¿???)
 
@@ -16,76 +14,54 @@
     -->
 <?php
 
-// tamaño total: $frases_sliders_tam
-//if (!$app_prod) {
-//  echo "<br><br><br><br><br>";
-//  echo "RANDOM [$frases_sliders_tam]=>" . $frases_sliders[random_int(0, $frases_sliders_tam)] . "]";
-//  echo "<br><br><br><br><br>";
-//}
+
+// Obtenemos los avisos a presentar.
+$av_avisos = [];
+$av_avisos = obtener_avisos_entrada();
+
 ?>
 
 <section id="avisos">
   <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
     <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <li data-target="#myCarousel" data-slide-to="2"></li>
+      <?php
+      $active = true;
+      $mensa = "";
+      for ($i = 0; $i < count($av_avisos); $i++) {
+        $mensa = '<li data-target="#myCarousel" data-slide-to="' . $i . '"';
+        if ($active) {
+          $active = false;
+          $mensa = $mensa . ' class="active"></li>';
+        } else {
+          $mensa = $mensa . '</li>';
+        }
+      }
+      echo $mensa;
+      ?>
     </ol>
 
     <div class="carousel-inner">
 
-      <!-- Aviso Inicial -->
-      <div class="carousel-item avisos-img-mensa active">
-        <div class="container">
-          <div class="carousel-caption text-right mb-5 text-white">
-            <h1 class="display-4">Para pensar</h1>
-            <p class="lead">
-              <?= $frases_sliders[random_int(0, $frases_sliders_tam)] ?>
-            </p>
+      <?php
+      $active = true;
+      foreach ($av_avisos as $av_key => $av_valor) {
+      ?>
+        <!-- Avisos -->
+        <div class="carousel-item <?= $av_valor['imagen'] ?><?= ($active) ? " active" : "" ?>">
+          <div class="container">
+            <div class="carousel-caption text-right mb-5 text-white">
+              <h1 class="display-4"><?= $av_valor['titulo'] ?></h1>
+              <p class="lead">
+                <?= $av_valor['subtitulo'] ?>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Aviso primero -->
-      <div class="carousel-item avisos-img-primitiva">
-        <div class="container">
-          <div class="carousel-caption text-right mb-5 text-white">
-            <h1 class="display-4">Primer Aviso</h1>
-            <p class="lead">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae,
-              commodi.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aviso segundo -->
-      <div class="carousel-item avisos-img-euromillones">
-        <div class="container">
-          <div class="carousel-caption text-left mb-5 text-white">
-            <h1 class="display-4">Segundo Aviso</h1>
-            <p class="lead">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae,
-              commodi.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aviso tercero -->
-      <div class="carousel-item avisos-img-loteria">
-        <div class="container">
-          <div class="carousel-caption text-center mb-5 text-white">
-            <h1 class="display-4">Tercer Aviso</h1>
-            <p class="lead">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae,
-              commodi.
-            </p>
-          </div>
-        </div>
-      </div>
+      <?php
+        $active = false;
+      }
+      ?>
     </div>
-
 
     <!-- Selectores laterales -->
     <a href="#myCarousel" data-slide="prev" class="carousel-control-prev">
