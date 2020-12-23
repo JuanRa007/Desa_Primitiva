@@ -74,14 +74,14 @@ $datos_apuestas = obtener_apuestas($apuesta);
               </h6>
               <hr />
               <div class="alert <?= "alert-" . $apuesta["color"] ?> text-center" role="alert">
-                Sorteo: <span class="badge"><?= genera_texto_fecha($apuesta["fechas"]) ?></span>
+                Sorteo: <span class="badge"><?= genera_texto_fecha($apuesta["fechas"], $tipo_apuesta) ?></span>
               </div>
               <?php
               if ($tipo_apuesta == 'lotnavidad') {
                 // Obtenemos la serie y la fracción.
                 $serie_fracc = explode('-', $apuesta["reintegros"]);
-                $decimo_frontal = obtener_nombre_fichero_decimo($apuesta["fechas"], true);
-                $decimo_trasera = obtener_nombre_fichero_decimo($apuesta["fechas"], false);
+                $decimo_frontal = obtener_nombre_fichero_decimo($apuesta["nom_fich"], true);
+                $decimo_trasera = obtener_nombre_fichero_decimo($apuesta["nom_fich"], false);
               ?>
                 <div class="alert text-center">
                   <h1><?= $apuesta["numeros"] ?></h1>

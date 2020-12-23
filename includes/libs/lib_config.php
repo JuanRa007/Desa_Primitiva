@@ -18,7 +18,8 @@ if ($app_prod) {
 }
 
 /* MENU CONFIGURATION */
-$act_pagina = basename($_SERVER['PHP_SELF']);
+$app_pagina = basename($_SERVER['PHP_SELF']);
+$app_direct = pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
 /* SALDO MÍNIMO */
 $app_saldominimo = 2.5;

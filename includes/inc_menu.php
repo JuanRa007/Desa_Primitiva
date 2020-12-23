@@ -9,19 +9,19 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item <?= ($act_pagina == "index.php") ? "active" : "" ?>">
+          <li class="nav-item <?= ($app_pagina == "index.php") ? "active" : "" ?>">
             <a href="index.php" class="nav-link">Inicio</a>
           </li>
-          <li class="nav-item <?= ($act_pagina == "saldos.php") ? "active" : "" ?>">
+          <li class="nav-item <?= ($app_pagina == "saldos.php") ? "active" : "" ?>">
             <a href="saldos.php" class="nav-link">Saldos</a>
           </li>
-          <li class="nav-item <?= ($act_pagina == "anteriores.php") ? "active" : "" ?>">
+          <li class="nav-item <?= ($app_pagina == "anteriores.php") ? "active" : "" ?>">
             <a href="anteriores.php" class="nav-link">Historial</a>
           </li>
-          <li class="nav-item <?= ($act_pagina == "mensajes.php") ? "active" : "" ?>">
+          <li class="nav-item <?= ($app_pagina == "mensajes.php") ? "active" : "" ?>">
             <a href="mensajes.php" class="nav-link">Blog</a>
           </li>
-          <li class="nav-item <?= ($act_pagina == "acercade.php") ? "active" : "" ?>">
+          <li class="nav-item <?= ($app_pagina == "acercade.php") ? "active" : "" ?>">
             <a href="acercade.php" class="nav-link">Acerca de</a>
           </li>
         </ul>

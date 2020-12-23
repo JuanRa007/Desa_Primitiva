@@ -1,7 +1,7 @@
 <!-- Cuerpo de página -->
 <?php
 
-switch ($act_pagina) {
+switch ($app_pagina) {
   case 'index.php':
     /* Sliders */
     require_once("./includes/inc_sliders.php");

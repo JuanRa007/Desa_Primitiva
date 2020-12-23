@@ -196,18 +196,24 @@ function obtener_saldos()
 }
 
 // Genera un literal con la tabla de fechas.
-function genera_texto_fecha($array_fecha)
+function genera_texto_fecha($array_fecha, $tipo_apuesta = "")
 {
 
+  // Inicializamos.
   $texto = "";
+  $separador = " y ";
+
+  // Si es una apuesta especial, la fecha es de un día a otro.
+  if ($tipo_apuesta == 'bonoloto') {
+    $separador = " al ";
+  }
 
   if (is_array($array_fecha)) {
-    $j = count($array_fecha);
     foreach ($array_fecha as $indice => $valor) {
       if (!$texto) {
         $texto = $valor;
       } else {
-        $texto = $texto . " - " . $valor;
+        $texto = $texto . $separador . $valor;
       }
     }
   } else {
@@ -388,8 +394,12 @@ function obtener_numeros_sorteo($numeros)
 function obtener_nombre_fichero_decimo($fecha, $fontral)
 {
 
+  // Traemos variables globales.
+  global $app_direct;
+
   // Definimos la ubicación.
   $ubicacion = "decimos/";
+  $nombre_fich_404 = "404.png";
 
   // Tratamos la fecha: 22/12/2020
   $nombre_fich = substr($fecha, 6, 4) . "-" . substr($fecha, 3, 2) . "-" . substr($fecha, 0, 2);
@@ -400,6 +410,11 @@ function obtener_nombre_fichero_decimo($fecha, $fontral)
     $nombre_fich = $nombre_fich . "f.jpg";
   } else {
     $nombre_fich = $nombre_fich . "t.jpg";
+  }
+
+  // Determinamos si existe el fichero.
+  if (!file_exists($nombre_fich)) {
+    $nombre_fich = $ubicacion . $nombre_fich_404;
   }
 
   return $nombre_fich;
@@ -684,7 +699,7 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
 /////////////////////////////////////
 // Prepara para el valor "Décimo"  //
 /////////////////////////////////////
-function prepara_decimo_fijo($cadena)
+function prepara_decimo_fijo($cadena, $fecha_reg)
 {
 
   // Incializar variable a devolver.
@@ -697,6 +712,7 @@ function prepara_decimo_fijo($cadena)
     // Obtenemos la fecha del sorteo.
     $afechas_decimo = f_otros_fechas($cadena);
     $fecha_sorteo = convierte_fecha($afechas_decimo[0]);
+    $fecha_fichero = convierte_fecha($fecha_reg);
     $num_sorteo = f_otros_decimo($cadena);
     $reintegros = f_otros_serie_fraccion($cadena); // Serie - Fracción
 
@@ -709,7 +725,8 @@ function prepara_decimo_fijo($cadena)
       'icono'      => "icon-LoteriaNacionalAJ",
       'numeros'    => $num_sorteo,
       'reintegros' => $reintegros,
-      'premio'     => ""
+      'premio'     => "",
+      'nom_fich'   => $fecha_fichero
     ];
   }
 
@@ -720,7 +737,7 @@ function prepara_decimo_fijo($cadena)
 /////////////////////////////////////
 // Prepara el campo bloque "otros" //
 /////////////////////////////////////
-function prepara_bloque_otros($fecha, $otros)
+function prepara_bloque_otros($fecha_reg, $otros)
 {
   global $app_prod;
 
@@ -729,7 +746,7 @@ function prepara_bloque_otros($fecha, $otros)
   // Separador.
   $text_separador = "--------";
 
-  if ($fecha && isset($fecha) && $otros && isset($otros)) {
+  if ($fecha_reg && isset($fecha_reg) && $otros && isset($otros)) {
 
     if (!$app_prod) {
       echo "----> Otros: " . $otros . "<br><br>";
@@ -737,7 +754,6 @@ function prepara_bloque_otros($fecha, $otros)
 
     // Trabajamos con una copia.
     $otros_bak = $otros;
-
     while (strlen($otros_bak)) {
 
       // Nos quedamos con la parte hasta $text_separador.
@@ -796,7 +812,7 @@ function prepara_bloque_otros($fecha, $otros)
         $mi_apuesta = [];
 
         // Obtenemos los datos del décimo.
-        $mi_apuesta = prepara_decimo_fijo($strmirar);
+        $mi_apuesta = prepara_decimo_fijo($strmirar, $fecha_reg);
         if ($mi_apuesta) {
           $apuesta_otros['lotnavidad'] = $mi_apuesta;
         }
@@ -816,20 +832,15 @@ function prepara_bloque_otros($fecha, $otros)
           echo "---------------------> [ BONOLOTO ]<br>";
         }
 
+        // Obtenemos los datos de la bonoloto.
+        $mi_apuesta = prepara_otros_bonoloto($strmirar);
+        if ($mi_apuesta) {
+          $apuesta_otros['bonoloto'] = $mi_apuesta;
+        }
+
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // Bonoloto - Fin
-
-
-
-
-
-
-
-
-
-
-
 
 
       // Buscamos El Gordo.
@@ -842,9 +853,22 @@ function prepara_bloque_otros($fecha, $otros)
           echo "---------------------> [ EL GORDO ]<br>";
         }
 
+        // Obtenemos los datos del Gordo.
+        $mi_apuesta = prepara_otros_elgordo($strmirar);
+        if ($mi_apuesta) {
+          $apuesta_otros['elgordo'] = $mi_apuesta;
+        }
+
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // El Gordo - Fin
+
+
+
+
+
+
+
 
 
 
@@ -936,6 +960,7 @@ function f_otros_fechas($strapuesta)
 
   // Tratamos cada fecha a formato de la aplicación.
   foreach ($aprefechas as $key => $value) {
+    $value = trim($value);
     $afechas[] = substr($value, 6, 4) . "-" . substr($value, 3, 2) . "-" . substr($value, 0, 2) . " 00:00:00";
   }
   return $afechas;
@@ -965,7 +990,9 @@ function f_otros_numeuro($strapuesta, &$strapureiuno, &$strapureidos)
     $anumbers[] = trim(substr($value, 0, $preint - 1));
     $reintegros = explode("-", trim(substr($value, $preint + 2)));
     $strapureiuno[] =  $reintegros[0];
-    $strapureidos[] =  $reintegros[1];
+    if (count($reintegros) > 1) {
+      $strapureidos[] =  $reintegros[1];
+    }
   }
 
   return $anumbers;
@@ -1027,21 +1054,170 @@ function f_otros_serie_fraccion($strdecimo)
   $strserie = "";
   $strfraccion = "";
 
+  // Textos a buscar.
+  $str_serie = "rie:";
+  $str_fraccion = "Fracción:";
+
   // Buscamos la serie
-  $posa = stripos($strdecimo, "rie:");
+  $posa = stripos($strdecimo, $str_serie);
   // Serie del décimo.
-  $strserie = trim(substr($strdecimo, $posa + 4, 6));
+  $strserie = trim(substr($strdecimo, $posa + strlen($str_serie), 6));
 
   // Buscamos la fracción
-  $posa = stripos($strdecimo, "Fracción:");
+  $posa = stripos($strdecimo, $str_fraccion);
   // Serie del décimo.
-  $strfraccion = trim(substr($strdecimo, $posa + 10));
+  $strfraccion = trim(substr($strdecimo, $posa + strlen($str_fraccion)));
 
   // Una vez obtenidos, los devolvemos como reintegros.
   $strnumber = $strserie . " - " . $strfraccion;
 
   return $strnumber;
 }
+
+
+/*
+/   OTROS: Preparación de las apuestas de Bonoloto
+/   ==================================================
+/
+/   Formato:
+/   Bonoloto (08/12/2014 - 12/12/2014):
+/   09-11-12-17-31-37   R.2
+/   /
+/   02-06-08-19-20-40   R.2
+/
+*/
+function prepara_otros_bonoloto($strapuesta)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+  $bono_runo = "";
+  $bono_rdos = "";
+  $strtitulo = "Bonoloto";
+  $strsubtitulo = "Semanal";
+
+  $bono_fecha = f_otros_fechas($strapuesta);
+  // Convertimos cada fecha a forma textual
+  foreach ($bono_fecha as $key => $fecha_valor) {
+    $bono_fecha[$key] = convierte_fecha($fecha_valor);
+  }
+
+  // Obtenemos los números del sorteo así como sus reintegros.
+  $bono_numeros = f_otros_numeuro($strapuesta, $bono_runo, $bono_rdos);
+  $bono_reintegros = $bono_runo;
+
+  // Formateamos los reintegros a dos números.
+  // En "$bono_numeros"/"$bono_runo"/"$bono_rdos" nos pueden llegar una tabla.
+  if (is_array($bono_runo)) {
+    $bonoloto_pro = "";
+    for ($i = 0; $i < count($bono_runo); $i++) {
+      $reintegros[] = $bono_runo[$i];
+    }
+    for ($i = 0; $i < count($bono_numeros); $i++) {
+      if ($i < 1) {
+        $bonoloto_pro = $bono_numeros[$i];
+      } else {
+        $bonoloto_pro = $bonoloto_pro . " / " . $bono_numeros[$i];
+      }
+    }
+  } else {
+    $bonoloto_pro =  $bono_numeros;
+    $bono_runo = number_format($bono_runo, 0, ',', '.');
+    $reintegros[] = $bono_runo;
+  }
+  $bono_numeros = obtener_numeros_sorteo($bonoloto_pro);
+
+  /*   echo "<pre>";
+  echo "APUESTA BONOLOTO: " . var_dump($bono_numeros) . "<br><br>";
+  echo "REI UNO:" . var_dump($bono_runo) . "<br><br>";
+  echo "REI DOS:" . var_dump($bono_rdos) . "<br><br>"; */
+
+  $apuesta_fija[] = [
+    'titulo'     => $strtitulo,
+    'subtitulo'  => $strsubtitulo,
+    'color'      => "primary",
+    'fechas'     => $bono_fecha,
+    'imagen'     => "b_bonoloto.png",
+    'icono'      => "icon-BonolotoAJ",
+    'numeros'    => $bono_numeros,
+    'reintegros' => $bono_reintegros,
+    'premio'     => ""
+  ];
+
+  return $apuesta_fija;
+}
+
+
+/*
+/   OTROS: Preparación de las apuestas de El Gordo
+/   ==================================================
+/
+/   Formato:
+/   El Gordo (14/08/2005):
+/   01-12-39-42-47  R.6
+/   /
+/   25-26-42-43-50  R.6
+/
+*/
+function prepara_otros_elgordo($strapuesta)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+  $gordo_runo = "";
+  $gordo_rdos = "";
+  $strtitulo = "El Gordo";
+  $strsubtitulo = "Semanal";
+
+  $gordo_fecha = f_otros_fechas($strapuesta);
+  // Convertimos cada fecha a forma textual
+  foreach ($gordo_fecha as $key => $fecha_valor) {
+    $gordo_fecha[$key] = convierte_fecha($fecha_valor);
+  }
+
+  // Obtenemos los números del sorteo así como sus reintegros.
+  $gordo_numeros = f_otros_numeuro($strapuesta, $gordo_runo, $gordo_rdos);
+  $gordo_reintegros = $gordo_runo;
+
+  // Formateamos los reintegros a dos números.
+  // En "$gordo_numeros"/"$gordo_runo"/"$gordo_rdos" nos pueden llegar una tabla.
+  if (is_array($gordo_runo)) {
+    $gordo_pro = "";
+    for ($i = 0; $i < count($gordo_runo); $i++) {
+      $reintegros[] = $gordo_runo[$i];
+    }
+    for ($i = 0; $i < count($gordo_numeros); $i++) {
+      if ($i < 1) {
+        $gordo_pro = $gordo_numeros[$i];
+      } else {
+        $gordo_pro = $gordo_pro . " / " . $gordo_numeros[$i];
+      }
+    }
+  } else {
+    $gordo_pro =  $gordo_numeros;
+    $gordo_runo = number_format($gordo_runo, 0, ',', '.');
+    $reintegros[] = $gordo_runo;
+  }
+  $bono_numeros = obtener_numeros_sorteo($gordo_pro);
+
+  $apuesta_fija[] = [
+    'titulo'     => $strtitulo,
+    'subtitulo'  => $strsubtitulo,
+    'color'      => "primary",
+    'fechas'     => $gordo_fecha,
+    'imagen'     => "b_elgordo.png",
+    'icono'      => "icon-ElGordoAJ",
+    'numeros'    => $gordo_numeros,
+    'reintegros' => $gordo_reintegros,
+    'premio'     => ""
+  ];
+
+  return $apuesta_fija;
+}
+
+
+
+
 
 
 
@@ -1077,7 +1253,7 @@ function obtener_avisos_entrada()
   $datos = consulta($misql);
   $row = fetch_array($datos);
   mysqli_free_result($datos);
-  $frase_dia = "El pasado día " . convierte_fecha($row['fecha']) . " obtuvimos un premio de: " . number_format(sprintf("%01.2f", $row['premio']), 2, ',', '.');;
+  $frase_dia = "El pasado día " . convierte_fecha($row['fecha']) . " obtuvimos un premio de <strong>" . number_format(sprintf("%01.2f", $row['premio']), 2, ',', '.') . " &euro;</strong>";
   $aavisos[] = [
     'titulo'     => "Último premio",
     'subtitulo'  => $frase_dia,
@@ -1090,13 +1266,37 @@ function obtener_avisos_entrada()
   $datos = consulta($misql);
   $row = fetch_array($datos);
   mysqli_free_result($datos);
-  $frase_dia = "Nuestro bote a día " . convierte_fecha($row['totfecha']) . " asciende a " . number_format(sprintf("%01.2f", $row['totsaldo']), 2, ',', '.');;
+  $frase_dia = "Nuestro bote a día " . convierte_fecha($row['totfecha']) . " asciende a <strong>" . number_format(sprintf("%01.2f", $row['totsaldo']), 2, ',', '.') . " &euro;</strong>";
   $aavisos[] = [
     'titulo'     => "Nuestro Bote",
     'subtitulo'  => $frase_dia,
     'imagen'     => "avisos-img-euromillones",
     'autor'      => ""
   ];
+
+  // 4.- Total de premios anules.
+  $ano_hoy = date('Y');
+  $fecha_ini = "01-01-" . $ano_hoy . " 00:00:00";
+  $fecha_ini = convierte_fecha($fecha_ini, "d-m-Y") . " 00:00:00";
+  $fecha_fin = "31-12-" . $ano_hoy . " 00:00:00";
+  $fecha_fin = convierte_fecha($fecha_fin, "d-m-Y") . " 00:00:00";
+  $misql = "SELECT SUM(premio) as totsaldo FROM numapuesta WHERE fecha >= STR_TO_DATE('" . $fecha_ini . "' , '%d-%m-%Y %H:%i:%s') and  fecha <= STR_TO_DATE('" . $fecha_fin . "' , '%d-%m-%Y %H:%i:%s')";
+  $datos = consulta($misql);
+  $row = fetch_array($datos);
+  mysqli_free_result($datos);
+  $frase_dia = "Durante este año hemos obtenido <strong>" . number_format(sprintf("%01.2f", $row['totsaldo']), 2, ',', '.') . " &euro;</strong>";
+  $aavisos[] = [
+    'titulo'     => "Total Anual",
+    'subtitulo'  => $frase_dia,
+    'imagen'     => "avisos-img-loteria",
+    'autor'      => ""
+  ];
+
+  // Desordenamos la tabla de avisos.
+  $aavisos_bak = $aavisos;
+  if (!shuffle($aavisos)) {
+    $aavisos = $aavisos_bak;
+  };
 
   // Devolvemos los valores obtenidos.
   return $aavisos;

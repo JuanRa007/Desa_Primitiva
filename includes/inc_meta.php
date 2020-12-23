@@ -2,7 +2,7 @@
 <meta name="description" content="Bienvenidos a Nuestras Apuestas: web dedicada al control del grupo de apostantes." />
 <!-- Valores META para los ficheros PHP -->
 <meta charset="UTF-8" />
-<link rel="icon" href="./img/favicon.ico" />
+<link rel="icon" href="./favicon.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- Fuente Google -->
 <link href="https://fonts.googleapis.com/css?family=Kulim+Park&display=swap" rel="stylesheet" />

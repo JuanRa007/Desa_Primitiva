@@ -41,8 +41,13 @@ $saldos_part = obtener_saldos();
                 $fecha = convierte_fecha($usuario[2]);
 
                 $clase = "";
-                if ($participante == "BOTE" || $participante == "Cestillo") {
+                if ($participante == "BOTE") {
                   $clase = 'class="table-primary"';
+                  $participante = "<strong>" . $participante . "</strong>";
+                }
+                if ($participante == "Cestillo") {
+                  $clase = 'class="table-info"';
+                  $participante = "<strong><em>" . $participante . "</em></strong>";
                 }
 
                 $clase_celda = "";

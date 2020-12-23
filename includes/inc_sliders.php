@@ -28,7 +28,7 @@ $av_avisos = obtener_avisos_entrada();
       $active = true;
       $mensa = "";
       for ($i = 0; $i < count($av_avisos); $i++) {
-        $mensa = '<li data-target="#myCarousel" data-slide-to="' . $i . '"';
+        $mensa = $mensa . '<li data-target="#myCarousel" data-slide-to="' . $i . '"';
         if ($active) {
           $active = false;
           $mensa = $mensa . ' class="active"></li>';

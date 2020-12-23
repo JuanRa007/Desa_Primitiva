@@ -1,7 +1,7 @@
-// Get the current year for the copyright
+// Obtenemos el año actual.
 $('#year').text(new Date().getFullYear());
 
-// Configure Slider
+// Configurar Slider
 $('.carousel').carousel({
 	interval: 6000,
 	pause: 'hover'
