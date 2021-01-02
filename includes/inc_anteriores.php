@@ -178,24 +178,18 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
     if ($fecha_dia > 0) {
     ?>
       <!--     RESTO -->
-      <div class=" row">
+      <div class="row">
         <div class="col-sm-6">
-          <div class="info-cabecera mt-5">
-            <h5 class="text-dark pb-3">
-              Fecha sorteo: <?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?>
-            </h5>
+          <div class="mt-5">
             <div class="alert alert-success text-center" role="alert">
               Sorteo: <span class="badge"><?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?></span>
             </div>
           </div>
         </div>
         <div class="col-sm-6">
-          <div class="info-cabecera mt-5">
-            <h5 class="text-dark pb-3">
-              Premio: <?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?>
-            </h5>
+          <div class="mt-5">
             <div class="alert alert-success text-center" role="alert">
-              Sorteo: <span class="badge"><?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?></span>
+              Premio: <span class="badge"><?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?></span>
             </div>
           </div>
         </div>
@@ -224,6 +218,116 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
         }
       }
       ?>
+      <table class="table table-bordered table-striped table-hover tabla-centra text-center">
+        <thead>
+          <tr>
+            <th>T</th>
+            <th>Sorteo</th>
+            <th>Fecha</th>
+            <th>Números</th>
+            <th>Reint.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          // Mostramos todas las apuestas obtenidas en el día.
+          foreach ($datos_apuestas as $ant_apuesta => $ant_apuestas) {
+
+            // Pintamos el inicio de fila de la tabla.
+            echo "<tr>";
+
+            // Tratamos cada apuesta presentando los datos.
+            foreach ($ant_apuestas as $ant_indice => $ant_valor_apu) {
+
+              //En función del sorteo habrá que presentar números o imágenes.
+              $tipo_sorteo_esp = false;
+              if ($ant_apuesta == 'lotnavidad' || $ant_apuesta == 'laonce') {
+                $tipo_sorteo_esp = true;
+                $ant_decimo_frontal = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, true);
+                $ant_decimo_trasera = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, false);
+              }
+
+              // El icono de la apuesta.
+              echo "<td>";
+              echo '<span class=' . $ant_valor_apu['icono'] . '><span class="path1"></span><span class="path2"></span><span
+              class="path3"></span><span class="path4"></span><span class="path5"></span><span
+              class="path6"></span><span class="path7"></span></span>';
+              echo "</td>";
+
+              // El título de la apuesta.
+              echo "<td>";
+              echo $ant_valor_apu['titulo'] . "<br/>" . $ant_valor_apu['subtitulo'];
+              echo "</td>";
+
+              // La fecha de la apuesta.
+              echo "<td>";
+              if (is_array($ant_valor_apu['fechas'])) {
+                $ant_afechas = $ant_valor_apu['fechas'];
+                if (count($ant_afechas) > 1) {
+                  echo $ant_afechas[0] . "<br/>" . $ant_afechas[1];
+                } else {
+                  echo $ant_afechas[0];
+                }
+              } else {
+                echo $ant_valor_apu['fechas'];
+              }
+              echo "</td>";
+
+              // Los números de la apuesta.
+              echo "<td>";
+              if (is_array($ant_valor_apu['numeros'])) {
+                $ant_anumeros = $ant_valor_apu['numeros'];
+                $ant_mensaje = "";
+                foreach ($ant_anumeros as $ant_indice_apu => $ant_apuesta_apu) {
+                  if ($ant_mensaje <> "") {
+                    $ant_mensaje = $ant_mensaje . "<br/>";
+                  }
+                  $ant_mensaje_linea = "";
+                  foreach ($ant_apuesta_apu as $llave1 => $valor_apuesta_apu) {
+                    if ($ant_mensaje_linea <> "") {
+                      $ant_mensaje_linea = $ant_mensaje_linea . "-";
+                    }
+                    $ant_mensaje_linea = $ant_mensaje_linea . $valor_apuesta_apu;
+                  }
+                  $ant_mensaje = $ant_mensaje . $ant_mensaje_linea;
+                }
+                echo $ant_mensaje;
+              } else {
+                echo $ant_valor_apu['numeros'];
+                // Para décimos:
+                if ($tipo_sorteo_esp) {
+                  echo $ant_valor_apu['reintegros'];
+                }
+              }
+              echo "</td>";
+
+              // Los reintegros de la apuesta o enlaces a las imágenes.
+              echo "<td>";
+              if (is_array($ant_valor_apu['reintegros'])) {
+                $ant_areintegros = $ant_valor_apu['reintegros'];
+                if (count($ant_areintegros) > 1) {
+                  echo $ant_areintegros[0] . "<br/>" . $ant_areintegros[1];
+                } else {
+                  echo $ant_areintegros[0];
+                }
+              } else {
+                // Para décimos:
+                if ($tipo_sorteo_esp) {
+                  // Enlace a los décimos.
+                  echo '<a href="' . $ant_decimo_frontal . '" data-toggle="lightbox" data-gallery="example-gallery">F</a>&nbsp;&nbsp;';
+                  echo '<a href="' . $ant_decimo_trasera . '" data-toggle="lightbox" data-gallery="example-gallery">T</a>';
+                } else {
+                  echo $ant_valor_apu['reintegros'];
+                }
+              }
+              echo "</td>";
+            }
+            // Pintamos el final de fila de la tabla.
+            echo "</tr>";
+          }
+          ?>
+        </tbody>
+      </table>
       <!--     RESTO -->
     <?php
     }

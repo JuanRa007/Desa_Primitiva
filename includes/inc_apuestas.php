@@ -77,16 +77,19 @@ $datos_apuestas = obtener_apuestas($apuesta);
                 Sorteo: <span class="badge"><?= genera_texto_fecha($apuesta["fechas"], $tipo_apuesta) ?></span>
               </div>
               <?php
-              if ($tipo_apuesta == 'lotnavidad') {
+              if ($tipo_apuesta == 'lotnavidad' || $tipo_apuesta == 'laonce') {
                 // Obtenemos la serie y la fracción.
                 $serie_fracc = explode('-', $apuesta["reintegros"]);
-                $decimo_frontal = obtener_nombre_fichero_decimo($apuesta["nom_fich"], true);
-                $decimo_trasera = obtener_nombre_fichero_decimo($apuesta["nom_fich"], false);
+                $decimo_frontal = obtener_nombre_fichero_decimo($apuesta["nom_fich"], $tipo_apuesta, true);
+                $decimo_trasera = obtener_nombre_fichero_decimo($apuesta["nom_fich"], $tipo_apuesta, false);
               ?>
                 <div class="alert text-center">
                   <h1><?= $apuesta["numeros"] ?></h1>
                   <h5>Serie: <span class="badge"><?= $serie_fracc[0] ?></span></h5>
-                  <h5>Fracción: <span class="badge"><?= $serie_fracc[1] ?></span></h5>
+                  <?php if ($tipo_apuesta !== 'laonce') {
+                  ?>
+                    <h5>Fracción: <span class="badge"><?= $serie_fracc[1] ?></span></h5>
+                  <?php } ?>
                 </div>
                 <div class="d-flex justify-content-center">
                   <a href="<?= $decimo_frontal ?>" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">

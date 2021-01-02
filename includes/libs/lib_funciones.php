@@ -391,7 +391,7 @@ function obtener_numeros_sorteo($numeros)
 }
 
 // Obtenemos el nombre y ubicación del fichero de decimo.
-function obtener_nombre_fichero_decimo($fecha, $fontral)
+function obtener_nombre_fichero_decimo($fecha, $tipo_apuesta, $fontral)
 {
 
   // Traemos variables globales.
@@ -400,12 +400,18 @@ function obtener_nombre_fichero_decimo($fecha, $fontral)
   // Definimos la ubicación.
   $ubicacion = "decimos/";
   $nombre_fich_404 = "404.png";
+  $nombre_fichero = "_decimo";
+
+  // Si el décimo es un de la once, el nombre cambia.
+  if ($tipo_apuesta == 'laonce') {
+    $nombre_fichero = "_once";
+  }
 
   // Tratamos la fecha: 22/12/2020
   $nombre_fich = substr($fecha, 6, 4) . "-" . substr($fecha, 3, 2) . "-" . substr($fecha, 0, 2);
 
   // Añadimos lo último
-  $nombre_fich = $ubicacion . $nombre_fich . "_decimo";
+  $nombre_fich = $ubicacion . $nombre_fich . $nombre_fichero;
   if ($fontral) {
     $nombre_fich = $nombre_fich . "f.jpg";
   } else {
@@ -699,7 +705,7 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
 /////////////////////////////////////
 // Prepara para el valor "Décimo"  //
 /////////////////////////////////////
-function prepara_decimo_fijo($cadena, $fecha_reg)
+function prepara_otros_decimo($cadena, $fecha_reg)
 {
 
   // Incializar variable a devolver.
@@ -714,7 +720,7 @@ function prepara_decimo_fijo($cadena, $fecha_reg)
     $fecha_sorteo = convierte_fecha($afechas_decimo[0]);
     $fecha_fichero = convierte_fecha($fecha_reg);
     $num_sorteo = f_otros_decimo($cadena);
-    $reintegros = f_otros_serie_fraccion($cadena); // Serie - Fracción
+    $reintegros = f_otros_serie_fraccion($cadena, true); // Facción y Serie
 
     $apuesta_fija[] = [
       'titulo'     => "Lotería Nacional",
@@ -722,6 +728,44 @@ function prepara_decimo_fijo($cadena, $fecha_reg)
       'color'      => "info",
       'fechas'     => $fecha_sorteo,
       'imagen'     => "b_loteria.png",
+      'icono'      => "icon-LoteriaNacionalAJ",
+      'numeros'    => $num_sorteo,
+      'reintegros' => $reintegros,
+      'premio'     => "",
+      'nom_fich'   => $fecha_fichero
+    ];
+  }
+
+  return $apuesta_fija;
+}
+
+
+//////////////////////////////////////
+// Prepara para el valor "La ONCE"  //
+//////////////////////////////////////
+function prepara_otros_laonce($cadena, $fecha_reg)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+  $afechas_decimo = [];
+
+  // Comprobamos que nos llega algo.
+  if ($cadena && isset($cadena)) {
+
+    // Obtenemos la fecha del sorteo.
+    $afechas_decimo = f_otros_fechas($cadena);
+    $fecha_sorteo = convierte_fecha($afechas_decimo[0]);
+    $fecha_fichero = convierte_fecha($fecha_reg);
+    $num_sorteo = f_otros_decimo($cadena);
+    $reintegros = f_otros_serie_fraccion($cadena, false); // Facción y Serie
+
+    $apuesta_fija[] = [
+      'titulo'     => "La ONCE",
+      'subtitulo'  => "Once de la Once",
+      'color'      => "success",
+      'fechas'     => $fecha_sorteo,
+      'imagen'     => "b_once.png",
       'icono'      => "icon-LoteriaNacionalAJ",
       'numeros'    => $num_sorteo,
       'reintegros' => $reintegros,
@@ -812,7 +856,7 @@ function prepara_bloque_otros($fecha_reg, $otros)
         $mi_apuesta = [];
 
         // Obtenemos los datos del décimo.
-        $mi_apuesta = prepara_decimo_fijo($strmirar, $fecha_reg);
+        $mi_apuesta = prepara_otros_decimo($strmirar, $fecha_reg);
         if ($mi_apuesta) {
           $apuesta_otros['lotnavidad'] = $mi_apuesta;
         }
@@ -864,15 +908,8 @@ function prepara_bloque_otros($fecha_reg, $otros)
       }   // El Gordo - Fin
 
 
-
-
-
-
-
-
-
-
       // Buscamos Once.
+      //=======================
       $pos1 = stripos($strmirar, "Once");
       if ($pos1 !== false) {
 
@@ -881,9 +918,18 @@ function prepara_bloque_otros($fecha_reg, $otros)
           echo "---------------------> [ ONCE ]<br>";
         }
 
+        // Obtenemos los datos del Décimo (La Once).
+        $mi_apuesta = prepara_otros_laonce($strmirar, $fecha_reg);
+        if ($mi_apuesta) {
+          $apuesta_otros['laonce'] = $mi_apuesta;
+        }
+
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // Once
+
+
+
 
 
 
@@ -1047,7 +1093,7 @@ function f_otros_decimo($strdecimo)
 /
 /   2.- Serie - Fracción.
 */
-function f_otros_serie_fraccion($strdecimo)
+function f_otros_serie_fraccion($strdecimo, $fraccSerie)
 {
   // Inicializamos la variable a devolver.
   $strnumber = "";
@@ -1069,7 +1115,11 @@ function f_otros_serie_fraccion($strdecimo)
   $strfraccion = trim(substr($strdecimo, $posa + strlen($str_fraccion)));
 
   // Una vez obtenidos, los devolvemos como reintegros.
-  $strnumber = $strserie . " - " . $strfraccion;
+  if ($fraccSerie) {
+    $strnumber = $strserie . " - " . $strfraccion;
+  } else {
+    $strnumber = $strserie;
+  }
 
   return $strnumber;
 }
@@ -1198,12 +1248,12 @@ function prepara_otros_elgordo($strapuesta)
     $gordo_runo = number_format($gordo_runo, 0, ',', '.');
     $reintegros[] = $gordo_runo;
   }
-  $bono_numeros = obtener_numeros_sorteo($gordo_pro);
+  $gordo_numeros = obtener_numeros_sorteo($gordo_pro);
 
   $apuesta_fija[] = [
     'titulo'     => $strtitulo,
     'subtitulo'  => $strsubtitulo,
-    'color'      => "primary",
+    'color'      => "danger",
     'fechas'     => $gordo_fecha,
     'imagen'     => "b_elgordo.png",
     'icono'      => "icon-ElGordoAJ",
@@ -1214,6 +1264,14 @@ function prepara_otros_elgordo($strapuesta)
 
   return $apuesta_fija;
 }
+
+
+
+
+
+
+
+
 
 
 
