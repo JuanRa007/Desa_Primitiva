@@ -165,6 +165,9 @@ ul > a:hover {
 }
 
 /* ANTERIORES */
+.tabla-centra {
+	margin: auto;
+}
 
 /* ********** Media Queries Small ********** */
 @media (min-width: 576px) {

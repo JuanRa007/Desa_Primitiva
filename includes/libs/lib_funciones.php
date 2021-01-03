@@ -426,6 +426,55 @@ function obtener_nombre_fichero_decimo($fecha, $tipo_apuesta, $fontral)
   return $nombre_fich;
 }
 
+// Obtiene el premio obtenido en las apuestas de un día.
+function obtener_premio_dia($registro_dia)
+{
+
+  // Inicializamos el premio a devolver.
+  $premio_dia = 0;
+
+  // Nos tiene que llegar algo.
+  if ($registro_dia && isset($registro_dia)) {
+
+    // El premio del día siempre se guarda en a
+    $reg_premio = $registro_dia['premio'];
+
+    // Formateamos el Premio.
+    if ($reg_premio && isset($reg_premio)) {
+      $premio_dia = number_format(sprintf("%01.2f", $reg_premio), 2, ',', '.');
+    }
+  }
+
+  // Devolvemos el premio encontrado.
+  return $premio_dia;
+}
+
+// Busca la existencia de un índice "Aviso" entre las apuestas del día.
+function buscar_aviso_apuesta($apuestas_dia, &$titulo_aviso, &$mensa_aviso)
+{
+
+  // Inicializamos los datos a devolver.
+  $encontrado_aviso = false;
+  $titulo_aviso = "";
+  $mensa_aviso = "";
+
+  // Buscamos el aviso
+  foreach ($apuestas_dia as $tipo_apuesta => $mi_apuesta) {
+
+    $cada_apuesta = $mi_apuesta[0];
+
+    if ($tipo_apuesta == 'aviso') {
+      $titulo_aviso = $cada_apuesta['titulo'];
+      $mensa_aviso = $cada_apuesta['subtitulo'];
+      $encontrado_aviso = true;
+    }
+  }
+
+  // Devolvemos el premio encontrado.
+  return $encontrado_aviso;
+}
+
+
 /////////////////////////////
 //                         //
 //  FUNCIONES PRINCIPALES  //
@@ -702,6 +751,7 @@ function prepara_euromillones_vari($fecha, $euromillon, $euroruno, $eurordos, $e
   return $apuesta_fija;
 }
 
+
 /////////////////////////////////////
 // Prepara para el valor "Décimo"  //
 /////////////////////////////////////
@@ -778,6 +828,40 @@ function prepara_otros_laonce($cadena, $fecha_reg)
 }
 
 
+//////////////////////////////////////
+// Prepara para el valor "AVISO"    //
+//////////////////////////////////////
+function prepara_otros_aviso($cadena, $fecha_reg)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+
+  // Comprobamos que nos llega algo.
+  if ($cadena && isset($cadena)) {
+
+    // Obtenemos la fecha del sorteo.
+    $afechas_aviso = f_otros_fechas($fecha_reg);
+
+
+    $apuesta_fija[] = [
+      'titulo'     => "Aviso",
+      'subtitulo'  => "Once de la Once",
+      'color'      => "success",
+      'fechas'     => $afechas_aviso,
+      'imagen'     => "b_aviso.png",
+      'icono'      => "icon-AvisoAJ",
+      'numeros'    => "",
+      'reintegros' => "",
+      'premio'     => ""
+    ];
+  }
+
+  return $apuesta_fija;
+}
+
+
+
 /////////////////////////////////////
 // Prepara el campo bloque "otros" //
 /////////////////////////////////////
@@ -844,7 +928,7 @@ function prepara_bloque_otros($fecha_reg, $otros)
 
       // Buscamos Décimo.
       //=======================
-      $pos1 = stripos($strmirar, "Décimo");
+      $pos1 = stripos($strmirar, "Décimo ");
       if ($pos1 !== false) {
 
         // Preparamos Décimo.
@@ -929,6 +1013,28 @@ function prepara_bloque_otros($fecha_reg, $otros)
       }   // Once
 
 
+      // Buscamos Aviso.
+      //=======================
+      $pos1 = stripos($strmirar, "Aviso");
+      if ($pos1 !== false) {
+
+        // Preparamos Aviso.
+        if (!$app_prod) {
+          echo "---------------------> [ AVISO ]<br>";
+        }
+
+        // Obtenemos los datos del Aviso (sólo texto).
+        $mi_apuesta = prepara_otros_aviso($strmirar, $fecha_reg);
+        if ($mi_apuesta) {
+          $apuesta_otros['aviso'] = $mi_apuesta;
+        }
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // Aviso
+
+
+
 
 
 
@@ -945,23 +1051,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // PrimitivaE
-
-
-
-      // Buscamos Aviso.
-      $pos1 = stripos($strmirar, "Aviso");
-      if ($pos1 !== false) {
-
-        // Preparamos Aviso.
-        if (!$app_prod) {
-          echo "---------------------> [ AVISO ]<br>";
-        }
-
-        // Limpiamos la cadena de trabajo.
-        $strmirar = "";
-      }   // Aviso
-
-
 
       // Buscamos Desconocido
       if ($strmirar) {

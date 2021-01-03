@@ -5,8 +5,12 @@ $apuesta = leer_apuesta_dia();
 $fecha_apu = convierte_fecha($apuesta['fecha']);
 // Fecha diferencias0
 $fecha_diff = fecha_diferencia($apuesta['fecha']);
-
+// Obtenemos los datos preparados para mostrar de las apuestas.
 $datos_apuestas = obtener_apuestas($apuesta);
+// Buscamos si se han incluido mensajes para mostrar.
+$aviso_titul = "";
+$aviso_mensa = "";
+$hay_aviso = buscar_aviso_apuesta($datos_apuestas, $aviso_titul, $aviso_mensa);
 
 /* if (!$app_prod) {
   echo "<pre>";
@@ -40,7 +44,23 @@ $datos_apuestas = obtener_apuestas($apuesta);
   <div class="container">
 
     <?php
+    //
+    // Hay AVISO
+    //
+    if ($hay_aviso) {
+    ?>
+      <div class="jumbotron">
+        <h1 class="display-4">AVISO:</h1>
+        <hr class="my-4">
+        <p class="h1 text-center"><strong><?= $aviso_titul ?></strong>
+        <p class="h2 text-center"><strong><?= $aviso_mensa ?></strong>
+        </p>
+      </div>
+    <?php
+    }
+    //
     // Hay PREMIO
+    //
     if ($apuesta["premio"] > 0) {
     ?>
       <div class="jumbotron">
@@ -59,6 +79,10 @@ $datos_apuestas = obtener_apuestas($apuesta);
       <?php
       foreach ($datos_apuestas as $tipo_apuesta => $mi_apuesta) {
         $apuesta = $mi_apuesta[0];
+        // Los avisos no se procesan.
+        if ($tipo_apuesta == 'aviso') {
+          continue;
+        }
       ?>
         <!-- ======= INICIO ======= -->
         <div class="col mb-4">
@@ -77,6 +101,9 @@ $datos_apuestas = obtener_apuestas($apuesta);
                 Sorteo: <span class="badge"><?= genera_texto_fecha($apuesta["fechas"], $tipo_apuesta) ?></span>
               </div>
               <?php
+              //
+              // Presentación Para DÉCIMOS: Navidad, Once.
+              //
               if ($tipo_apuesta == 'lotnavidad' || $tipo_apuesta == 'laonce') {
                 // Obtenemos la serie y la fracción.
                 $serie_fracc = explode('-', $apuesta["reintegros"]);

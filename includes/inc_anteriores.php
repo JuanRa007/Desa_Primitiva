@@ -36,9 +36,11 @@ $calendario = obtener_calendario($fecha_mes, $fecha_ano);
 
 // Si hay un día seleccionado, obtenmos sus apuestas.
 $datos_apuestas = [];
+$saldo_premio_dia = 0;
 if ($fecha_dia > 0) {
   $apuesta = leer_apuesta_dia($fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia . " 00:00:00");
   $datos_apuestas = obtener_apuestas($apuesta);
+  $saldo_premio_dia = obtener_premio_dia($apuesta);
 }
 
 // Punteros mes anterior y mes posterior.
@@ -74,7 +76,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
 
 <!-- Nuestras apuestas -->
 
-<section id="anteriores" class="bg-light pt-5">
+<section id="anteriores" class="bg-light pt-5 pb-5">
   <div class="container text-center pt-5">
     <div class="row">
       <div class="col">
@@ -136,7 +138,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
           } elseif ($valor['enlace']) {
             $clase_celda = "text-white bg-info";
             // Para los enlaces, el texto contendrá el enlace al día.
-            $cel_texto = '<a class="' . $clase_celda . '" href=anteriores.php?fecsel=' . $valor["dia"] . '/' . $fecha_mes . '/' . $fecha_ano . '>' . $cel_texto . '</a>';
+            $cel_texto = '<strong><a class="' . $clase_celda . '" href=anteriores.php?fecsel=' . $valor["dia"] . '/' . $fecha_mes . '/' . $fecha_ano . '>' . $cel_texto . '</a></strong>';
           }
             ?>
             <td class="<?= $clase_celda ?>"> <?= $cel_texto ?> </td>
@@ -182,14 +184,15 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
         <div class="col-sm-6">
           <div class="mt-5">
             <div class="alert alert-success text-center" role="alert">
-              Sorteo: <span class="badge"><?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?></span>
+              Sorteo: <span class="badge"><?= $fecha_dia . "-" . $fecha_mes . "-" . $fecha_ano ?></span>
             </div>
           </div>
         </div>
         <div class="col-sm-6">
           <div class="mt-5">
             <div class="alert alert-success text-center" role="alert">
-              Premio: <span class="badge"><?= $fecha_ano . "-" . $fecha_mes . "-" . $fecha_dia ?></span>
+              Premio: <span class="badge"><?= $saldo_premio_dia ?></span>
+
             </div>
           </div>
         </div>
@@ -248,19 +251,19 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
               }
 
               // El icono de la apuesta.
-              echo "<td>";
+              echo "<td class='align-middle'>";
               echo '<span class=' . $ant_valor_apu['icono'] . '><span class="path1"></span><span class="path2"></span><span
               class="path3"></span><span class="path4"></span><span class="path5"></span><span
               class="path6"></span><span class="path7"></span></span>';
               echo "</td>";
 
               // El título de la apuesta.
-              echo "<td>";
+              echo "<td class='align-middle'>";
               echo $ant_valor_apu['titulo'] . "<br/>" . $ant_valor_apu['subtitulo'];
               echo "</td>";
 
               // La fecha de la apuesta.
-              echo "<td>";
+              echo "<td class='align-middle'>";
               if (is_array($ant_valor_apu['fechas'])) {
                 $ant_afechas = $ant_valor_apu['fechas'];
                 if (count($ant_afechas) > 1) {
@@ -274,7 +277,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
               echo "</td>";
 
               // Los números de la apuesta.
-              echo "<td>";
+              echo "<td class='align-middle'>";
               if (is_array($ant_valor_apu['numeros'])) {
                 $ant_anumeros = $ant_valor_apu['numeros'];
                 $ant_mensaje = "";
@@ -302,7 +305,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
               echo "</td>";
 
               // Los reintegros de la apuesta o enlaces a las imágenes.
-              echo "<td>";
+              echo "<td class='align-middle'>";
               if (is_array($ant_valor_apu['reintegros'])) {
                 $ant_areintegros = $ant_valor_apu['reintegros'];
                 if (count($ant_areintegros) > 1) {
