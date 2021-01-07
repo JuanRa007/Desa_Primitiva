@@ -1,5 +1,7 @@
 <?php
 
+// define('APP_PROD', false);
+
 /* TEST O PRODUCTIVO */
 $app_prod = false;
 

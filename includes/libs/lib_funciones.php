@@ -808,7 +808,7 @@ function prepara_otros_laonce($cadena, $fecha_reg)
     $fecha_sorteo = convierte_fecha($afechas_decimo[0]);
     $fecha_fichero = convierte_fecha($fecha_reg);
     $num_sorteo = f_otros_decimo($cadena);
-    $reintegros = f_otros_serie_fraccion($cadena, false); // Facción y Serie
+    $reintegros = f_otros_serie_fraccion($cadena, false); // Serie
 
     $apuesta_fija[] = [
       'titulo'     => "La ONCE",
@@ -841,16 +841,18 @@ function prepara_otros_aviso($cadena, $fecha_reg)
   if ($cadena && isset($cadena)) {
 
     // Obtenemos la fecha del sorteo.
-    $afechas_aviso = f_otros_fechas($fecha_reg);
-
+    $afechas_aviso = convierte_fecha($fecha_reg);
+    // Separamos el aviso en cabecera y mensaje.
+    $aviso_titulo = "Mensaje emitido el día: " . $afechas_aviso;
+    $aviso_mensaje = f_otros_aviso($cadena);
 
     $apuesta_fija[] = [
-      'titulo'     => "Aviso",
-      'subtitulo'  => "Once de la Once",
+      'titulo'     => $aviso_titulo,
+      'subtitulo'  => $aviso_mensaje,
       'color'      => "success",
       'fechas'     => $afechas_aviso,
-      'imagen'     => "b_aviso.png",
-      'icono'      => "icon-AvisoAJ",
+      'imagen'     => "",
+      'icono'      => "",
       'numeros'    => "",
       'reintegros' => "",
       'premio'     => ""
@@ -860,6 +862,114 @@ function prepara_otros_aviso($cadena, $fecha_reg)
   return $apuesta_fija;
 }
 
+
+/*
+/   OTROS: Preparación de las apuestas de PrimitivaE
+/   ==================================================
+/
+/   Formato:
+/   PrimitivaE (26/12/2020 - 26/12/2020):
+/   05-10-13-29-44-45   R.4
+/   /
+/   02-19-27-29-36-41   R.4
+/
+*/
+function prepara_otros_primitiva($cadena, $fecha_reg)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+  $primi_uno = "";
+  $primi_dos = "";
+  $strtitulo = "Primitiva";
+  $strsubtitulo = "Especial";
+
+  // Obtenemos las fechas del sorteo.
+  $primi_fecha = f_otros_fechas($cadena);
+  // Convertimos cada fecha a forma textual
+  foreach ($primi_fecha as $key => $fecha_valor) {
+    $primi_fecha[$key] = convierte_fecha($fecha_valor);
+  }
+
+  // Obtenemos los números del sorteo así como sus reintegros (solo habrá uno).
+  $primi_numeros = f_otros_numeuro($cadena, $primi_uno, $primi_dos);
+  $primi_reintegros = $primi_uno;
+
+  // Formateamos los reintegros a dos números.
+  // En "$primi_numeros"/"$primi_uno"/"$primi_dos" nos pueden llegar una tabla.
+  if (is_array($primi_uno)) {
+    $primitiva_pro = "";
+    for ($i = 0; $i < count($primi_uno); $i++) {
+      $reintegros[] = $primi_uno[$i];
+    }
+    for ($i = 0; $i < count($primi_numeros); $i++) {
+      if ($i < 1) {
+        $primitiva_pro = $primi_numeros[$i];
+      } else {
+        $primitiva_pro = $primitiva_pro . " / " . $primi_numeros[$i];
+      }
+    }
+  } else {
+    $primitiva_pro =  $primi_numeros;
+    $primi_uno = number_format($primi_uno, 0, ',', '.');
+    $reintegros[] = $primi_uno;
+  }
+  $primi_numeros = obtener_numeros_sorteo($primitiva_pro);
+
+  /*   echo "<pre>";
+  echo "APUESTA PRIMITIVAE: " . var_dump($primi_numeros) . "<br><br>";
+  echo "REI UNO:" . var_dump($primi_uno) . "<br><br>";
+  echo "REI DOS:" . var_dump($primi_dos) . "<br><br>"; */
+
+  $apuesta_fija[] = [
+    'titulo'     => $strtitulo,
+    'subtitulo'  => $strsubtitulo,
+    'color'      => "success",
+    'fechas'     => $primi_fecha,
+    'imagen'     => "b_primitiva.png",
+    'icono'      => "icon-PrimitivaAJ",
+    'numeros'    => $primi_numeros,
+    'reintegros' => $primi_reintegros,
+    'premio'     => ""
+  ];
+
+  return $apuesta_fija;
+}
+
+
+/////////////////////////////////////////
+// Prepara para el valor "DESCONOCIDO" //
+/////////////////////////////////////////
+function prepara_otros_desconocido($cadena, $fecha_reg)
+{
+
+  // Incializar variable a devolver.
+  $apuesta_fija = [];
+
+  // Comprobamos que nos llega algo.
+  if ($cadena && isset($cadena)) {
+
+    // Obtenemos la fecha del sorteo.
+    $afechas_desco = convierte_fecha($fecha_reg);
+    // Separamos el aviso en cabecera y mensaje.
+    $desco_titulo = "[Desconocido]: " . $afechas_desco;
+    $desco_mensaje = strip_tags($cadena);
+
+    $apuesta_fija[] = [
+      'titulo'     => $desco_titulo,
+      'subtitulo'  => $desco_mensaje,
+      'color'      => "success",
+      'fechas'     => $afechas_desco,
+      'imagen'     => "",
+      'icono'      => "",
+      'numeros'    => "",
+      'reintegros' => "",
+      'premio'     => ""
+    ];
+  }
+
+  return $apuesta_fija;
+}
 
 
 /////////////////////////////////////
@@ -928,7 +1038,7 @@ function prepara_bloque_otros($fecha_reg, $otros)
 
       // Buscamos Décimo.
       //=======================
-      $pos1 = stripos($strmirar, "Décimo ");
+      $pos1 = strpos($strmirar, "Décimo");      // Usamos STRPOS para distinguir mayúsculas y minúsculas.
       if ($pos1 !== false) {
 
         // Preparamos Décimo.
@@ -1015,7 +1125,7 @@ function prepara_bloque_otros($fecha_reg, $otros)
 
       // Buscamos Aviso.
       //=======================
-      $pos1 = stripos($strmirar, "Aviso");
+      $pos1 = strpos($strmirar, "Aviso");      // Usamos STRPOS para distinguir mayúsculas y minúsculas.
       if ($pos1 !== false) {
 
         // Preparamos Aviso.
@@ -1034,12 +1144,8 @@ function prepara_bloque_otros($fecha_reg, $otros)
       }   // Aviso
 
 
-
-
-
-
-
       // Buscamos PrimitivaE.
+      //=======================
       $pos1 = stripos($strmirar, "PrimitivaE");
       if ($pos1 !== false) {
 
@@ -1048,21 +1154,37 @@ function prepara_bloque_otros($fecha_reg, $otros)
           echo "---------------------> [ PRIMITIVAE ]<br>";
         }
 
+        // Inicializamos.
+        $mi_apuesta = [];
+
+        // Obtenemos los datos de la apuesta.
+        $mi_apuesta = prepara_otros_primitiva($strmirar, $fecha_reg);
+        if ($mi_apuesta) {
+          $apuesta_otros['primitivae'] = $mi_apuesta;
+        }
+
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // PrimitivaE
 
+
       // Buscamos Desconocido
+      //=======================
       if ($strmirar) {
         // Preparamos Desconocido.
         if (!$app_prod) {
           echo "---------------------> [ DESCONOCIDO ]<br>";
         }
 
+        // Obtenemos los datos no conocido (sólo texto).
+        $mi_apuesta = prepara_otros_desconocido($strmirar, $fecha_reg);
+        if ($mi_apuesta) {
+          $apuesta_otros['desconocido'] = $mi_apuesta;
+        }
+
         // Limpiamos la cadena de trabajo.
         $strmirar = "";
       }   // Desconocido
-
 
     }   // end while
   }
@@ -1354,6 +1476,62 @@ function prepara_otros_elgordo($strapuesta)
   return $apuesta_fija;
 }
 
+/*
+/   OTROS: Preparación del texto para Avisos
+/   ==================================================
+/
+/   Formato:
+/   Aviso : <mensaje>
+/
+/   1.- Mensaje
+*/
+function f_otros_aviso($straviso)
+{
+
+  // Inicializamos la variable a devolver.
+  $strmensaje = "";
+
+  // Buscamos el separador ":"
+  $posa = stripos($straviso, ":");
+
+  // Mensaje del aviso.
+  $strmensaje = trim(substr($straviso, $posa + 1));
+
+  if (strlen($strmensaje) > 70) {
+
+    // Inicializamos el mensaje de salida.
+    $strdividido = "";
+    $strlinea = "";
+
+    while (strlen($strmensaje) > 0) {
+
+      // Buscamos el primer espacio
+      $posa = stripos($strmensaje, " ");
+
+      if ($posa > 0) {
+
+        // Añadimos el trozo a la dividida.
+        $strlinea = $strlinea . " " . trim(substr($strmensaje, 0, $posa));
+
+        // Y lo quitamos de la principal.
+        $strmensaje = trim(substr($strmensaje, $posa));
+
+        if (strlen($strlinea) > 60) {
+          $strdividido = $strdividido . $strlinea . "<br>";
+          $strlinea = "";
+        }
+      } else {
+        $strdividido = $strdividido . trim($strmensaje);
+        $strmensaje = "";
+      }
+    }
+
+    // Devolvemos la cadena dividada.
+    $strmensaje = trim($strdividido);
+  }
+
+  return $strmensaje;
+}
 
 
 

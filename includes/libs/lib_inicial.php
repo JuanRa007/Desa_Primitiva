@@ -1,4 +1,6 @@
 <?php
+// ob_start();
+// session_start();
 
 /* Incluimos los elementos a usar */
 

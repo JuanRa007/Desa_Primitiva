@@ -50,11 +50,10 @@ $hay_aviso = buscar_aviso_apuesta($datos_apuestas, $aviso_titul, $aviso_mensa);
     if ($hay_aviso) {
     ?>
       <div class="jumbotron">
-        <h1 class="display-4">AVISO:</h1>
+        <h1 class="display-6">AVISO:</h1>
         <hr class="my-4">
-        <p class="h1 text-center"><strong><?= $aviso_titul ?></strong>
-        <p class="h2 text-center"><strong><?= $aviso_mensa ?></strong>
-        </p>
+        <p class="h2 text-center"><?= $aviso_titul ?></p>
+        <p class="h3"><?= $aviso_mensa ?></p>
       </div>
     <?php
     }
@@ -81,6 +80,16 @@ $hay_aviso = buscar_aviso_apuesta($datos_apuestas, $aviso_titul, $aviso_mensa);
         $apuesta = $mi_apuesta[0];
         // Los avisos no se procesan.
         if ($tipo_apuesta == 'aviso') {
+          continue;
+        }
+        // Los desconocidos se vuelcan a la consola.
+        if ($tipo_apuesta == 'desconocido') {
+          $desconocido = "";
+          $desconocido = '<script>';
+          $desconocido .= 'console.log("DESCONOCIDO:");';
+          $desconocido .= 'console.log("Título: "' . $apuesta["titulo"] . ');';
+          $desconocido .= 'console.log("Subtítulo: ["' . $apuesta["subtitulo"] . ');';
+          $desconocido .= '</script>';
           continue;
         }
       ?>

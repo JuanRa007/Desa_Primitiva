@@ -221,7 +221,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
         }
       }
       ?>
-      <table class="table table-bordered table-striped table-hover tabla-centra text-center">
+      <table class="table table-sm table-bordered table-striped table-hover text-center">
         <thead>
           <tr>
             <th>T</th>
@@ -299,7 +299,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
                 echo $ant_valor_apu['numeros'];
                 // Para décimos:
                 if ($tipo_sorteo_esp) {
-                  echo $ant_valor_apu['reintegros'];
+                  echo "<br>" . $ant_valor_apu['reintegros'];
                 }
               }
               echo "</td>";
