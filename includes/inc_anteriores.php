@@ -131,26 +131,39 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
 
           // Estilo de la celda.
           $clase_celda = "";
+          $enlace_celda = "";
           if ($valor['hoy']) {
             $clase_celda = "bg-primary text-white";
           } elseif ($valor['festivo']) {
             $clase_celda = "text-danger";
           } elseif ($valor['enlace']) {
-            $clase_celda = "text-white bg-info";
+            $clase_celda = "text-white bg-info puntero";
             // Para los enlaces, el texto contendrá el enlace al día.
-            $cel_texto = '<strong><a class="' . $clase_celda . '" href=anteriores.php?fecsel=' . $valor["dia"] . '/' . $fecha_mes . '/' . $fecha_ano . '>' . $cel_texto . '</a></strong>';
+            //$cel_texto = '<strong><a class="' . $clase_celda . '" href=anteriores.php?fecsel=' . $valor["dia"] . '/' . $fecha_mes . '/' . $fecha_ano . '>' . $cel_texto . '</a></strong>';
+            //
+            // <td class="text-white bg-info cursor" onclick="miFuncion(7,12,2020)">7</a>
+            $enlace_celda = "onclick='obtenerApuestasdia($cel_texto,$fecha_mes,$fecha_ano)'";
           }
+
+          // Si es un enlace,
+          if ($enlace_celda) {
             ?>
-            <td class="<?= $clase_celda ?>"> <?= $cel_texto ?> </td>
+              <td class="<?= $clase_celda ?>" <?= $enlace_celda ?>><?= $cel_texto ?></td>
             <?php
-            $semana++;
-            if ($semana > 7) {
-              $semana = 1;
+          } else {
+            ?>
+              <td class="<?= $clase_celda ?>"><?= $cel_texto ?></td>
+            <?php
+          }
+
+          $semana++;
+          if ($semana > 7) {
+            $semana = 1;
             ?>
             </tr>
         <?php
-            }
           }
+        }
         ?>
       </tbody>
     </table>

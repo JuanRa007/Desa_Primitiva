@@ -1,5 +1,6 @@
  <!-- Pie de página -->
- <footer class="pt-3 page-footer Footer">
+ <!-- <footer class="footer mt-auto py-3 pt-3 page-footer Footer"> -->
+ <footer class="footer mt-auto py-3 Footer">
    <div class="container">
      <div class="row">
        <aside class="col-12 col-lg-6 order-lg-1">

@@ -12,3 +12,10 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
 	event.preventDefault();
 	$(this).ekkoLightbox();
 });
+
+// Llamada AJAX para obtener las apuestas del día seleccionado.
+function obtenerApuestasdia(dia, mes, ano) {
+	console.log(dia);
+	console.log(mes);
+	console.log(ano);
+}

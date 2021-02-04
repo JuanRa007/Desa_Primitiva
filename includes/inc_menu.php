@@ -18,12 +18,18 @@
           <li class="nav-item <?= ($app_pagina == "anteriores.php") ? "active" : "" ?>">
             <a href="anteriores.php" class="nav-link">Historial</a>
           </li>
-          <li class="nav-item <?= ($app_pagina == "mensajes.php") ? "active" : "" ?>">
-            <a href="mensajes.php" class="nav-link">Blog</a>
-          </li>
-          <li class="nav-item <?= ($app_pagina == "acercade.php") ? "active" : "" ?>">
-            <a href="acercade.php" class="nav-link">Acerca de</a>
-          </li>
+          <?php
+          if (!$app_prod) {
+          ?>
+            <li class="nav-item <?= ($app_pagina == "mensajes.php") ? "active" : "" ?>">
+              <a href="mensajes.php" class="nav-link">Blog</a>
+            </li>
+            <li class="nav-item <?= ($app_pagina == "acercade.php") ? "active" : "" ?>">
+              <a href="acercade.php" class="nav-link">Acerca de</a>
+            </li>
+          <?php
+          }
+          ?>
         </ul>
       </div>
     </div>

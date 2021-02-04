@@ -5,12 +5,13 @@ $connection = new mysqli($app_host, $app_user, $app_pass, $app_dbname);
 
 if ($connection->connect_errno) {
   echo "Fallo al conectar a MySQL: (" . $connection->connect_errno . ") " . $connection->connect_error;
+  die();
 }
 
 /* cambiar el conjunto de caracteres a utf8 */
 if (!mysqli_set_charset($connection, "utf8")) {
   printf("Error cargando el conjunto de caracteres utf8: %s\n", mysqli_error($connection));
-  exit();
+  die();
 }
 
 /* FUNCIONES DB */

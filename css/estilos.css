@@ -169,6 +169,10 @@ ul > a:hover {
 	margin: auto;
 }
 
+.puntero {
+	cursor: pointer !important;
+}
+
 /* ********** Media Queries Small ********** */
 @media (min-width: 576px) {
 }
