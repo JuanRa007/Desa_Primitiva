@@ -120,9 +120,6 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
           } elseif ($valor['enlace']) {
             $clase_celda = "text-white bg-info puntero";
             // Para los enlaces, el texto contendrá el enlace al día.
-            //$cel_texto = '<strong><a class="' . $clase_celda . '" href=anteriores.php?fecsel=' . $valor["dia"] . '/' . $fecha_mes . '/' . $fecha_ano . '>' . $cel_texto . '</a></strong>';
-            //
-            // <td class="text-white bg-info cursor" onclick="miFuncion(7,12,2020)">7</a>
             $enlace_celda = "onclick='obtenerApuestasdia($cel_texto,$fecha_mes,$fecha_ano)'";
           }
 
@@ -170,7 +167,13 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
       </tbody>
     </table>
 
-    <section id="resultadia" class="bg-light pt-5 pb-5"></section>
+    <section class="bg-light pt-5 pb-5">
+      <div class="loader" id="loader"></div>
+      <div>
+        <table id="resultadia" class="table-sm table-bordered table-striped tabla-centra text-center mt-5">
+        </table>
+      </div>
+    </section>
 
   </div>
 </section>

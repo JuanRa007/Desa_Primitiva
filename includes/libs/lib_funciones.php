@@ -68,7 +68,6 @@ function obtener_nombre_mes_ano($mes, $ano)
   return $tex_mes . " - " . $tex_ano;
 }
 
-
 // Convierte una fecha de BBDD a formato simple.
 function convierte_fecha($fecha_recibida, $formato = "d/m/Y")
 {
