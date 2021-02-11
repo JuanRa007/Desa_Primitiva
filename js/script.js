@@ -48,19 +48,21 @@ function obtenerApuestasdia(dia, mes, ano) {
 		if (datos.error) {
 			console.log('Error al obtener los datos.');
 		} else {
-			console.log(datos);
-			for (let i = 0; i < datos.length; i++) {
-				console.log(datos[i]);
+			// console.log(datos);
+			datos.forEach((element) => {
+				//console.log(element);
 				var elemento = document.createElement('tr');
-				elemento.innerHTML += '<td>1.-' + datos[i] + '</td>';
-				/*
-				elemento.innerHTML += '<td>' + datos[i].nombre + '</td>';
-				elemento.innerHTML += '<td>' + datos[i].edad + '</td>';
-				elemento.innerHTML += '<td>' + datos[i].pais + '</td>';
-				elemento.innerHTML += '<td>' + datos[i].correo + '</td>';
- 				*/
+				elemento.innerHTML += '<td>' + element.titulo + '</td>';
+				elemento.innerHTML += '<td>' + element.subtitulo + '</td>';
+				elemento.innerHTML += '<td>' + element.color + '</td>';
+				elemento.innerHTML += '<td>' + element.fechas + '</td>';
+				elemento.innerHTML += '<td>' + element.imagen + '</td>';
+				elemento.innerHTML += '<td>' + element.icono + '</td>';
+				elemento.innerHTML += '<td>' + element.numeros + '</td>';
+				elemento.innerHTML += '<td>' + element.reintegros + '</td>';
+				elemento.innerHTML += '<td>' + element.premio + '</td>';
 				tabla.appendChild(elemento);
-			}
+			});
 		}
 	};
 

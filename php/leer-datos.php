@@ -21,14 +21,17 @@ if ($_GET) {
   // Lectura de la apuesta.
   $apuesta = leer_apuesta_dia($fecha_apuesta);
   $datos_apuestas = obtener_apuestas($apuesta);
-  //$saldo_premio_dia = obtener_premio_dia($apuesta);
+  $nuevas_apuestas = [];
+  foreach ($datos_apuestas  as $ant_apuesta => $ant_apuestas) {
+    foreach ($ant_apuestas as $ant_indice => $ant_valor_apu) {
+      $nuevas_apuestas[] = $ant_valor_apu;
+    }
+  }
 } else {
 
   // No nos ha llegado nada, devolvemos un error.
-  $datos_apuestas = ['error' => true];
+  $nuevas_apuestas = ['error' => true];
 }
 
-echo json_encode($datos_apuestas);
-// echo "<pre>";
-// echo print_r($datos_apuestas);
-// echo "</pre>";
+// Devolvemos lo obtenido: o un error o las apuestas del día.
+echo json_encode($nuevas_apuestas);

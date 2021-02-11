@@ -381,7 +381,6 @@ function obtener_numeros_sorteo($numeros)
   $series_num = explode("/", $numeros);
 
   foreach ($series_num as $serie) {
-    //echo "Serie:" . trim($serie) . "<br>";
 
     $num_serie[] = explode("-", trim($serie));
   }
@@ -915,11 +914,6 @@ function prepara_otros_primitiva($cadena, $fecha_reg)
   }
   $primi_numeros = obtener_numeros_sorteo($primitiva_pro);
 
-  /*   echo "<pre>";
-  echo "APUESTA PRIMITIVAE: " . var_dump($primi_numeros) . "<br><br>";
-  echo "REI UNO:" . var_dump($primi_uno) . "<br><br>";
-  echo "REI DOS:" . var_dump($primi_dos) . "<br><br>"; */
-
   $apuesta_fija[] = [
     'titulo'     => $strtitulo,
     'subtitulo'  => $strsubtitulo,
@@ -985,10 +979,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
 
   if ($fecha_reg && isset($fecha_reg) && $otros && isset($otros)) {
 
-    if (!$app_prod) {
-      echo "----> Otros: " . $otros . "<br><br>";
-    }
-
     // Trabajamos con una copia.
     $otros_bak = $otros;
     while (strlen($otros_bak)) {
@@ -1007,11 +997,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       //=======================
       $pos1 = stripos($strmirar, "Euromillón");
       if ($pos1 !== false) {
-
-        // Preparamos Euromillones.
-        if (!$app_prod) {
-          echo "---------------------> [ EUROMILLONES ]<br>";
-        }
 
         // Inicializamos.
         $mi_apuesta = [];
@@ -1040,11 +1025,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       $pos1 = strpos($strmirar, "Décimo");      // Usamos STRPOS para distinguir mayúsculas y minúsculas.
       if ($pos1 !== false) {
 
-        // Preparamos Décimo.
-        if (!$app_prod) {
-          echo "---------------------> [ DÉCIMO ]<br>";
-        }
-
         // Inicializamos.
         $mi_apuesta = [];
 
@@ -1064,11 +1044,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       $pos1 = stripos($strmirar, "Bonoloto");
       if ($pos1 !== false) {
 
-        // Preparamos Bonoloto.
-        if (!$app_prod) {
-          echo "---------------------> [ BONOLOTO ]<br>";
-        }
-
         // Obtenemos los datos de la bonoloto.
         $mi_apuesta = prepara_otros_bonoloto($strmirar);
         if ($mi_apuesta) {
@@ -1084,11 +1059,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       //=======================
       $pos1 = stripos($strmirar, "El Gordo");
       if ($pos1 !== false) {
-
-        // Preparamos El Gordo.
-        if (!$app_prod) {
-          echo "---------------------> [ EL GORDO ]<br>";
-        }
 
         // Obtenemos los datos del Gordo.
         $mi_apuesta = prepara_otros_elgordo($strmirar);
@@ -1106,11 +1076,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       $pos1 = stripos($strmirar, "Once");
       if ($pos1 !== false) {
 
-        // Preparamos Once.
-        if (!$app_prod) {
-          echo "---------------------> [ ONCE ]<br>";
-        }
-
         // Obtenemos los datos del Décimo (La Once).
         $mi_apuesta = prepara_otros_laonce($strmirar, $fecha_reg);
         if ($mi_apuesta) {
@@ -1127,11 +1092,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       $pos1 = strpos($strmirar, "Aviso");      // Usamos STRPOS para distinguir mayúsculas y minúsculas.
       if ($pos1 !== false) {
 
-        // Preparamos Aviso.
-        if (!$app_prod) {
-          echo "---------------------> [ AVISO ]<br>";
-        }
-
         // Obtenemos los datos del Aviso (sólo texto).
         $mi_apuesta = prepara_otros_aviso($strmirar, $fecha_reg);
         if ($mi_apuesta) {
@@ -1147,11 +1107,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       //=======================
       $pos1 = stripos($strmirar, "PrimitivaE");
       if ($pos1 !== false) {
-
-        // Preparamos PrimitivaE.
-        if (!$app_prod) {
-          echo "---------------------> [ PRIMITIVAE ]<br>";
-        }
 
         // Inicializamos.
         $mi_apuesta = [];
@@ -1170,10 +1125,6 @@ function prepara_bloque_otros($fecha_reg, $otros)
       // Buscamos Desconocido
       //=======================
       if ($strmirar) {
-        // Preparamos Desconocido.
-        if (!$app_prod) {
-          echo "---------------------> [ DESCONOCIDO ]<br>";
-        }
 
         // Obtenemos los datos no conocido (sólo texto).
         $mi_apuesta = prepara_otros_desconocido($strmirar, $fecha_reg);
@@ -1386,11 +1337,6 @@ function prepara_otros_bonoloto($strapuesta)
     $reintegros[] = $bono_runo;
   }
   $bono_numeros = obtener_numeros_sorteo($bonoloto_pro);
-
-  /*   echo "<pre>";
-  echo "APUESTA BONOLOTO: " . var_dump($bono_numeros) . "<br><br>";
-  echo "REI UNO:" . var_dump($bono_runo) . "<br><br>";
-  echo "REI DOS:" . var_dump($bono_rdos) . "<br><br>"; */
 
   $apuesta_fija[] = [
     'titulo'     => $strtitulo,
