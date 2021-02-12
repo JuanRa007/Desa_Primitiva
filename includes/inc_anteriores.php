@@ -169,6 +169,7 @@ $enlace_mes_pos = "anteriores.php?messel=" . $mes_pos . "&anosel=" . $ano_pos;
 
     <section class="bg-light pt-5 pb-5">
       <div class="loader" id="loader"></div>
+      <div id="premio"></div>
       <div>
         <table id="resultadia" class="table-sm table-bordered table-striped tabla-centra text-center mt-5">
         </table>

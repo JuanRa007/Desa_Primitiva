@@ -24,7 +24,19 @@ if ($_GET) {
   $nuevas_apuestas = [];
   foreach ($datos_apuestas  as $ant_apuesta => $ant_apuestas) {
     foreach ($ant_apuestas as $ant_indice => $ant_valor_apu) {
-      $nuevas_apuestas[] = $ant_valor_apu;
+      //$nuevas_apuestas[] = $ant_valor_apu;
+      $nuevas_apuestas[] = [
+        'tipoapu'    => $ant_apuesta,
+        'titulo'     => $ant_valor_apu['titulo'],
+        'subtitulo'  => $ant_valor_apu['subtitulo'],
+        'color'      => $ant_valor_apu['color'],
+        'fechas'     => $ant_valor_apu['fechas'],
+        'imagen'     => $ant_valor_apu['imagen'],
+        'icono'      => $ant_valor_apu['icono'],
+        'numeros'    => $ant_valor_apu['numeros'],
+        'reintegros' => $ant_valor_apu['reintegros'],
+        'premio'     => $ant_valor_apu['premio']
+      ];
     }
   }
 } else {
@@ -35,3 +47,6 @@ if ($_GET) {
 
 // Devolvemos lo obtenido: o un error o las apuestas del día.
 echo json_encode($nuevas_apuestas);
+// echo "<pre>";
+// echo print_r($nuevas_apuestas);
+// echo "</pre>";

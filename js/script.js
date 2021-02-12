@@ -17,25 +17,24 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
 function obtenerApuestasdia(dia, mes, ano) {
 	// Actuamos sobre la zona con id "resultadia"
 	var tabla = document.getElementById('resultadia'),
-		loader = document.getElementById('loader');
+		loader = document.getElementById('loader'),
+		premio = document.getElementById('premio');
 
 	var txtfecha = dia + '/' + mes + '/' + ano;
-	var txtimporte = 100;
+	var verpremio = true;
+	var txtimporte = 0;
 
 	var mensa_fecha =
 		"<div class='row'><div class='col-sm-6'><div class='mt-5'><div class='alert alert-success text-center' role='alert'>Sorteo: <span class='badge'>" +
 		txtfecha +
 		'</span></div></div></div>';
 	var mensa_importe =
-		"<div class='col-sm-6'><div class='mt-5'><div class='alert alert-success text-center' role='alert'>Premio: <span class='badge'>" +
-		txtimporte +
-		'</span></div></div></div></div>';
+		"<div class='col-sm-6'><div class='mt-5'><div class='alert alert-success text-center' role='alert'>Premio: <span class='badge'>";
 
 	// Activamos el acceso ajax
 	var peticion = new XMLHttpRequest();
 
 	// El programa que nos devolverá los datos
-	var llamada = './php/leer-datos.php?dia=' + dia + '&mes=' + mes + '&ano=' + ano;
 	peticion.open('GET', './php/leer-datos.php?dia=' + dia + '&mes=' + mes + '&ano=' + ano);
 
 	// Ponemos un cursor dando vueltas (de espera)
@@ -48,10 +47,21 @@ function obtenerApuestasdia(dia, mes, ano) {
 		if (datos.error) {
 			console.log('Error al obtener los datos.');
 		} else {
-			// console.log(datos);
+			// Valores iniciales de la tabla.
 			datos.forEach((element) => {
 				//console.log(element);
+
+				if (verpremio) {
+					// Presentamos la fecha y el premio obtenido.
+					premio.innerHTML = mensa_fecha + mensa_importe + element.premio + '</span></div></div></div></div>';
+					tabla.innerHTML =
+						"<table class='table table-sm table-bordered table-striped table-hover text-center'><thead><tr><th>T</th><th>Sorteo</th>" +
+						'<th>Fecha</th><th>Números</th><th>Reint.</th></tr></thead><tbody>';
+					verpremio = false;
+				}
+
 				var elemento = document.createElement('tr');
+				elemento.innerHTML += '<td>' + element.tipoapu + '</td>';
 				elemento.innerHTML += '<td>' + element.titulo + '</td>';
 				elemento.innerHTML += '<td>' + element.subtitulo + '</td>';
 				elemento.innerHTML += '<td>' + element.color + '</td>';
