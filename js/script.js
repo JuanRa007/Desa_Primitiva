@@ -47,6 +47,10 @@ function obtenerApuestasdia(dia, mes, ano) {
 
 		if (datos.error) {
 			console.log('Error al obtener los datos.');
+			// Cuidado: se acumulan los TR!!!!
+			var elemento = document.createElement('tr');
+			elemento.innerHTML += '<td class="table-danger">Error al obtener los datos</td>';
+			tabla.appendChild(elemento);
 		} else {
 			// Valores iniciales de la tabla.
 			str_tabla = '';
@@ -54,6 +58,10 @@ function obtenerApuestasdia(dia, mes, ano) {
 
 			datos.forEach((element) => {
 				//console.log(element);
+				$tipo_sorteo_esp = false;
+				if (element.tipoapu == 'lotnavidad' || element.tipoapu == 'laonce') {
+					$tipo_sorteo_esp = true;
+				}
 
 				if (verpremio) {
 					// Presentamos la fecha y el premio obtenido.
@@ -82,39 +90,61 @@ function obtenerApuestasdia(dia, mes, ano) {
 				str_apuestas += '<td class="align-middle">';
 				var fechas = element.fechas;
 				var salto = false;
-				fechas.forEach((fecha_apu) => {
-					if (salto) {
-						str_apuestas += '<br/>';
-					}
-					str_apuestas += fecha_apu;
-					salto = true;
-				});
+				if (typeof fechas == 'string') {
+					str_apuestas += fechas;
+				} else {
+					fechas.forEach((fecha_apu) => {
+						if (salto) {
+							str_apuestas += '<br/>';
+						}
+						str_apuestas += fecha_apu;
+						salto = true;
+					});
+				}
 				str_apuestas += '</td>';
 
 				// Los números de la apuesta
 				str_apuestas += '<td class="align-middle">';
 				var numeros = element.numeros;
+				var reintegros = element.reintegros;
 				var salto = false;
-				numeros.forEach((number_apu) => {
-					if (salto) {
-						str_apuestas += '<br/>';
+				if (typeof numeros == 'string') {
+					str_apuestas += numeros;
+					if ($tipo_sorteo_esp) {
+						str_apuestas += '<br/>' + reintegros;
 					}
-					str_apuestas += number_apu;
-					salto = true;
-				});
+				} else {
+					numeros.forEach((number_apu) => {
+						if (salto) {
+							str_apuestas += '<br/>';
+						}
+						number_apu = number_apu.toString();
+						str_apuestas += number_apu.replace(/,/g, '-');
+						salto = true;
+					});
+				}
 				str_apuestas += '</td>';
 
 				// Los reintegros de la apuesta o enlaces a las imágenes de los décimos.
 				str_apuestas += '<td class="align-middle">';
-				var reintegros = element.reintegros;
+				// var reintegros = element.reintegros;
 				var salto = false;
-				reintegros.forEach((reintegro_apu) => {
-					if (salto) {
-						str_apuestas += '<br/>';
+				if (typeof reintegros == 'string') {
+					if ($tipo_sorteo_esp) {
+						str_apuestas +=
+							'<a href="#" data-toggle="lightbox" data-gallery="example-gallery">F</a>&nbsp;&nbsp;<a href="#" data-toggle="lightbox" data-gallery="example-gallery">T</a>';
+					} else {
+						str_apuestas += reintegros;
 					}
-					str_apuestas += reintegro_apu;
-					salto = true;
-				});
+				} else {
+					reintegros.forEach((reintegro_apu) => {
+						if (salto) {
+							str_apuestas += '<br/>';
+						}
+						str_apuestas += reintegro_apu;
+						salto = true;
+					});
+				}
 				str_apuestas += '</td>';
 
 				// Finalizamos la tabla con las apuestas.
