@@ -417,7 +417,9 @@ function obtener_nombre_fichero_decimo($fecha, $tipo_apuesta, $fontral)
   }
 
   // Determinamos si existe el fichero.
-  if (!file_exists($nombre_fich)) {
+  // Por la llamada ajax el fichero hay que mirarlo desde "php".
+  $nombre_fich_ajax = "../" . $nombre_fich;
+  if (!file_exists($nombre_fich_ajax)) {
     $nombre_fich = $ubicacion . $nombre_fich_404;
   }
 

@@ -131,8 +131,15 @@ function obtenerApuestasdia(dia, mes, ano) {
 				var salto = false;
 				if (typeof reintegros == 'string') {
 					if ($tipo_sorteo_esp) {
+						// echo '<a href="' . $ant_decimo_frontal . '" data-toggle="lightbox" data-gallery="example-gallery">F</a>&nbsp;&nbsp;';
 						str_apuestas +=
-							'<a href="#" data-toggle="lightbox" data-gallery="example-gallery">F</a>&nbsp;&nbsp;<a href="#" data-toggle="lightbox" data-gallery="example-gallery">T</a>';
+							'<a href="' +
+							element.decfrontal +
+							'" data-toggle="lightbox" data-gallery="example-gallery">F</a>&nbsp;&nbsp;';
+						str_apuestas +=
+							'<a href="' +
+							element.dectrasera +
+							'" data-toggle="lightbox" data-gallery="example-gallery">T</a>';
 					} else {
 						str_apuestas += reintegros;
 					}

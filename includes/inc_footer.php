@@ -18,7 +18,7 @@
              <a href="https://www.youtube.com/channel/UCiUZTmMsHAVmOAdakUweRTg" target="blank"><i class="fab fa-youtube"></i></a>
            </li>
            <li>
-             <a href="https://www.instagram.com/juanra_007/" target="blank"><i class="fab fa-instagram"></i></a>
+             <a href="https://www.instagram.com/juanrahortal/" target="blank"><i class="fab fa-instagram"></i></a>
            </li>
          </ul>
        </aside>
