@@ -25,6 +25,13 @@ if ($_GET) {
   foreach ($datos_apuestas  as $ant_apuesta => $ant_apuestas) {
     foreach ($ant_apuestas as $ant_indice => $ant_valor_apu) {
       //$nuevas_apuestas[] = $ant_valor_apu;
+      if ($ant_apuesta == 'lotnavidad' || $ant_apuesta == 'laonce') {
+        $ant_decimo_frontal = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, true);
+        $ant_decimo_trasera = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, false);
+      } else {
+        $ant_decimo_frontal = "";
+        $ant_decimo_trasera = "";
+      }
       $nuevas_apuestas[] = [
         'tipoapu'    => $ant_apuesta,
         'titulo'     => $ant_valor_apu['titulo'],
@@ -35,7 +42,9 @@ if ($_GET) {
         'icono'      => $ant_valor_apu['icono'],
         'numeros'    => $ant_valor_apu['numeros'],
         'reintegros' => $ant_valor_apu['reintegros'],
-        'premio'     => $ant_valor_apu['premio']
+        'premio'     => $ant_valor_apu['premio'],
+        'decfrontal' => $ant_decimo_frontal,
+        'dectrasera' => $ant_decimo_trasera
       ];
     }
   }
