@@ -12,7 +12,8 @@ $aviso_titul = "";
 $aviso_mensa = "";
 $hay_aviso = buscar_aviso_apuesta($datos_apuestas, $aviso_titul, $aviso_mensa);
 
-/* if (!$app_prod) {
+/*
+if (!$app_prod) {
   echo "<pre>";
   // echo print_r($datos_apuestas);
   echo "<br>";
@@ -23,7 +24,8 @@ $hay_aviso = buscar_aviso_apuesta($datos_apuestas, $aviso_titul, $aviso_mensa);
 
   //echo "REGISTRO:" . print_r($datos_apuestas['primifija']) . "<br>";
   exit();
-} */
+}
+*/
 ?>
 
 <!-- Nuestras apuestas -->

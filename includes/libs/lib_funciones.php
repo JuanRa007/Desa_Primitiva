@@ -534,8 +534,8 @@ function obtener_apuestas($registro)
       echo $reg_fecha . "<br>";
       echo $reg_numfijo . "<br>";
       echo $reg_numfijor . "<br>";
-      echo $reg_numvari . "<br>";
-      echo $reg_numvarir . "<br>";
+      echo "NumVari:" . $reg_numvari . "<br>";
+      echo "NumVariR:" . $reg_numvarir . "<br>";
       echo $reg_euromillon . "<br>";
       echo $reg_euroruno . "<br>";
       echo $reg_eurordos . "<br>";
@@ -543,8 +543,8 @@ function obtener_apuestas($registro)
       echo $reg_euromillon1 . "<br>";
       echo $reg_euroruno1 . "<br>";
       echo $reg_eurordos1 . "<br>";
-      echo $reg_numvari1 . "<br>";
-      echo $reg_numvari1r . "<br>";
+      echo "NumVari1:" . $reg_numvari1 . "<br>";
+      echo "NumVari1R:" . $reg_numvari1r . "<br>";
       echo $reg_premio . "<br>";
       echo $reg_marvie . "<br>";
     }
@@ -633,14 +633,16 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
   // Incializar variable a devolver.
   $apuesta_fija = [];
 
-  if ($fecha && isset($fecha) && $numvari && isset($numvari) && $numvarir && isset($numvarir)) {
+  //  if ($fecha && isset($fecha) && $numvari && isset($numvari) && $numvarir && isset($numvarir)) {
+  if ($fecha && isset($fecha) && $numvari && isset($numvari) && isset($numvarir)) {
 
     // Buscar el jueves y sábado de la fecha indicada.
     $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
     $reintegros[] = $numvarir;
 
     // Obtener apuestas.
-    if ($numvari1 && isset($numvari1) && $numvari1r && isset($numvari1r)) {
+    //if ($numvari1 && isset($numvari1) && $numvari1r && isset($numvari1r)) {
+    if ($numvari1 && isset($numvari1) && isset($numvari1r)) {
       $numvari = $numvari . " / " . $numvari1;
       $reintegros[] = $numvari1r;
     }
