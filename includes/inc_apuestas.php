@@ -118,8 +118,8 @@ if (!$app_prod) {
               if ($tipo_apuesta == 'lotnavidad' || $tipo_apuesta == 'laonce') {
                 // Obtenemos la serie y la fracción.
                 $serie_fracc = explode('-', $apuesta["reintegros"]);
-                $decimo_frontal = obtener_nombre_fichero_decimo($apuesta["nom_fich"], $tipo_apuesta, true);
-                $decimo_trasera = obtener_nombre_fichero_decimo($apuesta["nom_fich"], $tipo_apuesta, false);
+                $decimo_frontal = obtener_nombre_fichero_decimo($apuesta["nom_fich"], $tipo_apuesta, true, false);
+                $decimo_trasera = obtener_nombre_fichero_decimo($apuesta["nom_fich"], $tipo_apuesta, false, false);
               ?>
                 <div class="alert text-center">
                   <h1><?= $apuesta["numeros"] ?></h1>

@@ -26,8 +26,8 @@ if ($_GET) {
     foreach ($ant_apuestas as $ant_indice => $ant_valor_apu) {
       //$nuevas_apuestas[] = $ant_valor_apu;
       if ($ant_apuesta == 'lotnavidad' || $ant_apuesta == 'laonce') {
-        $ant_decimo_frontal = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, true);
-        $ant_decimo_trasera = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, false);
+        $ant_decimo_frontal = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, true, true);
+        $ant_decimo_trasera = obtener_nombre_fichero_decimo($ant_valor_apu["nom_fich"], $ant_apuesta, false, true);
       } else {
         $ant_decimo_frontal = "";
         $ant_decimo_trasera = "";

@@ -389,7 +389,7 @@ function obtener_numeros_sorteo($numeros)
 }
 
 // Obtenemos el nombre y ubicación del fichero de decimo.
-function obtener_nombre_fichero_decimo($fecha, $tipo_apuesta, $fontral)
+function obtener_nombre_fichero_decimo($fecha, $tipo_apuesta, $fontral, $porajax)
 {
 
   // Traemos variables globales.
@@ -418,7 +418,12 @@ function obtener_nombre_fichero_decimo($fecha, $tipo_apuesta, $fontral)
 
   // Determinamos si existe el fichero.
   // Por la llamada ajax el fichero hay que mirarlo desde "php".
-  $nombre_fich_ajax = "../" . $nombre_fich;
+  if ($porajax) {
+    $nombre_fich_ajax = "../" . $nombre_fich;
+  } else {
+    $nombre_fich_ajax = $nombre_fich;
+  }
+
   if (!file_exists($nombre_fich_ajax)) {
     $nombre_fich = $ubicacion . $nombre_fich_404;
   }
