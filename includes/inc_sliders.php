@@ -1,19 +1,16 @@
 <!-- Slider Ultimos Avisos -->
-<!--  
-      Posibles Avisos:
-      - Último premio obtenido.
-      - Saldo del bote
-      - Otros avisos (¿¿???)
-
-
-      Se puede generar una base de datos con los avisos a presentar.
-      - Fechas de Vigencias (inicio - fin)
-      - Texto del aviso.
-      - Imagen a presentar (avisos-img-primitiva, etc.)
-      - 
-    -->
 <?php
+/* Posibles Avisos:
+  - Último premio obtenido.
+  - Saldo del bote
+  - Otros avisos (¿¿???)
 
+  Se puede generar una base de datos con los avisos a presentar.
+  - Fechas de Vigencias (inicio - fin)
+  - Texto del aviso.
+  - Imagen a presentar (avisos-img-primitiva, etc.)
+  -  
+*/
 
 // Obtenemos los avisos a presentar.
 $av_avisos = [];

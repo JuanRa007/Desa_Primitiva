@@ -1487,19 +1487,6 @@ function f_otros_aviso($straviso)
   return $strmensaje;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /////////////////////////////////////////////////
 //                                             //
 // Obtenemos los avisos para mostrar la inicio //
@@ -1514,6 +1501,20 @@ function obtener_avisos_entrada()
 
   // Inicializamos.
   $aavisos = [];
+
+  // Si courre algún error con las frases, devolvemos una única de ejemplo.
+  if (!isset($frases_sliders_tam) || $frases_sliders_tam == 0) {
+
+    $aavisos[] = [
+      'titulo'     => "Para pensar",
+      'subtitulo'  => "Si puedes soñarlo, puedes hacerlo.",
+      'imagen'     => "avisos-img-mensa",
+      'autor'      => "JuanRa"
+    ];
+
+    // Devolvemos los valores obtenidos.
+    return $aavisos;
+  }
 
   // 1.- Obtenemos la frase del día
   $frase_dia = $frases_sliders[random_int(0, $frases_sliders_tam)];

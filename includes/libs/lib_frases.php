@@ -78,4 +78,7 @@ $frases_sliders = [
 ];
 
 // Para el random
-$frases_sliders_tam = count($frases_sliders) - 1;
+$frases_sliders_tam = count($frases_sliders);
+if ($frases_sliders_tam > 0) {
+  $frases_sliders_tam--;
+}
