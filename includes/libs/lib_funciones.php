@@ -200,11 +200,19 @@ function genera_texto_fecha($array_fecha, $tipo_apuesta = "")
 
   // Inicializamos.
   $texto = "";
-  $separador = " y ";
+  $separador0 = " y ";
+  $separador1 = ", ";
+  $separador = "";
+  $indicador = false;
+
+  // Cuántas fechas nos llegan
+  $tot_fechas = sizeof($array_fecha);
 
   // Si es una apuesta especial, la fecha es de un día a otro.
   if ($tipo_apuesta == 'bonoloto') {
     $separador = " al ";
+  } else {
+    $separador = $separador0;
   }
 
   if (is_array($array_fecha)) {
@@ -212,6 +220,12 @@ function genera_texto_fecha($array_fecha, $tipo_apuesta = "")
       if (!$texto) {
         $texto = $valor;
       } else {
+        if ($tot_fechas > 2 && $indicador == false) {
+          $separador = $separador1;
+          $indicador = true;
+        } else {
+          $separador = $separador0;
+        }
         $texto = $texto . $separador . $valor;
       }
     }
@@ -294,6 +308,33 @@ function obtener_fecha_sorteo($tipo, $fecha)
       } else {
         $fecha_new = convierte_fecha($fecha);
       }
+      $fechas_proceso[] = $fecha_new;
+
+      // Ahora el sábado siguiente.
+      $diasumres += 2;
+      $opesumres = "+";
+      $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      $fechas_proceso[] = $fecha_new;
+      break;
+
+    case 'lunsab':
+      if ($diasemana > 1) {
+        // Decrementamos el día hasta ser lunes.
+        $diasumres = $diasemana;
+        $opesumres = "-";
+      }
+
+      if ($diasumres) {
+        $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
+      } else {
+        $fecha_new = convierte_fecha($fecha);
+      }
+      $fechas_proceso[] = $fecha_new;
+
+      // Ahora el martes.
+      $diasumres += 1;
+      $opesumres = "+";
+      $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
       $fechas_proceso[] = $fecha_new;
 
       // Ahora el sábado siguiente.
@@ -533,6 +574,11 @@ function obtener_apuestas($registro)
     // Euromillón: sólo viernes, sólo martes, semanal.
     $reg_marvie = $registro['marvie'];
 
+    // Primitiva: desde el 11/07/2022 pueden ser tres días de apuestas (lunes, martes y jueves)
+    $reg_primitresdias     = $registro['primitresdias'];
+    $reg_primivaritresdias = $registro['primivaritresdias'];
+
+
     //===================================================
     /*
     if (!$app_prod) {
@@ -552,12 +598,14 @@ function obtener_apuestas($registro)
       echo "NumVari1R:" . $reg_numvari1r . "<br>";
       echo $reg_premio . "<br>";
       echo $reg_marvie . "<br>";
+      echo "Primitiva tres días:".$reg_primitresdias."<br>";
+      echo "Primitiva Vari tres días:".$reg_primivaritresdias."<br>";
     }
     */
     //===================================================
 
     // Prepara $reg_numfijo
-    $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor, $reg_premio);
+    $mi_apuesta = prepara_primtiva_fija($reg_fecha, $reg_numfijo, $reg_numfijor, $reg_premio, $reg_primitresdias);
     if ($mi_apuesta) {
       $mis_apuestas['primifija'] = $mi_apuesta;
     }
@@ -590,7 +638,7 @@ function obtener_apuestas($registro)
 ////////////////////////////////
 // Prepara el campo "numfijo" //
 ////////////////////////////////
-function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
+function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio, $primitresdias)
 {
 
   // Incializar variable a devolver.
@@ -606,8 +654,14 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
       $imp_premio = number_format(sprintf("%01.2f", $premio), 2, ',', '.');
     }
 
-    // Buscar el jueves y sábado de la fecha indicada.
-    $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
+    // Buscar el jueves y sábado de la fecha indicada, o lunes, jueves y sábado.
+    if ($primitresdias) {
+      $fecha_juesab = obtener_fecha_sorteo("lunsab", $fecha);
+      $fecha_juesab_lit = "Lunes, Martes y Sábado";
+    } else {
+      $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
+      $fecha_juesab_lit = "Jueves y Sábado";
+    }
 
     // Obtener apuestas.
     $num_sorteo = obtener_numeros_sorteo($numeros);
@@ -615,7 +669,7 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio)
 
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Fija Semanal",
-      'subtitulo'  => "Jueves y Sábado",
+      'subtitulo'  => $fecha_juesab_lit,
       'color'      => "success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
