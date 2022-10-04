@@ -6,7 +6,8 @@
 //                         //
 /////////////////////////////
 
-function obtener_calendario(&$fecmes, &$fecano)
+// function obtener_calendario(&$fecmes, &$fecano)
+function obtener_calendario($fecmes, $fecano)
 {
 
   // Días con sorteos en el mes buscado.

@@ -331,8 +331,8 @@ function obtener_fecha_sorteo($tipo, $fecha)
       }
       $fechas_proceso[] = $fecha_new;
 
-      // Ahora el martes.
-      $diasumres += 1;
+      // Ahora el Jueves.
+      $diasumres += 3;
       $opesumres = "+";
       $fecha_new = date("d/m/Y", strtotime($fecha . $opesumres . $diasumres . " days"));
       $fechas_proceso[] = $fecha_new;
@@ -611,7 +611,7 @@ function obtener_apuestas($registro)
     }
 
     // Prepara $reg_numvari
-    $mi_apuesta = prepara_primtiva_vari($reg_fecha, $reg_numvari, $reg_numvarir, $reg_numvari1, $reg_numvari1r);
+    $mi_apuesta = prepara_primtiva_vari($reg_fecha, $reg_numvari, $reg_numvarir, $reg_numvari1, $reg_numvari1r, $reg_primivaritresdias);
     if ($mi_apuesta) {
       $mis_apuestas['primisema'] = $mi_apuesta;
     }
@@ -657,7 +657,7 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio, $primitres
     // Buscar el jueves y sábado de la fecha indicada, o lunes, jueves y sábado.
     if ($primitresdias) {
       $fecha_juesab = obtener_fecha_sorteo("lunsab", $fecha);
-      $fecha_juesab_lit = "Lunes, Martes y Sábado";
+      $fecha_juesab_lit = "Lunes, Jueves y Sábado";
     } else {
       $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
       $fecha_juesab_lit = "Jueves y Sábado";
@@ -686,7 +686,7 @@ function prepara_primtiva_fija($fecha, $numeros, $reintegro, $premio, $primitres
 //////////////////////////////////
 // Prepara los campos "numvari" //
 //////////////////////////////////
-function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1r)
+function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1r, $primivaritresdias)
 {
 
   // Incializar variable a devolver.
@@ -696,7 +696,17 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
   if ($fecha && isset($fecha) && $numvari && isset($numvari) && isset($numvarir)) {
 
     // Buscar el jueves y sábado de la fecha indicada.
-    $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
+    // $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
+
+    // Buscar el jueves y sábado de la fecha indicada, o lunes, jueves y sábado.
+    if ($primivaritresdias) {
+      $fecha_juesab = obtener_fecha_sorteo("lunsab", $fecha);
+      $fecha_juesab_lit = "Lunes, Martes y Sábado";
+    } else {
+      $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
+      $fecha_juesab_lit = "Jueves y Sábado";
+    }
+
     $reintegros[] = $numvarir;
 
     // Obtener apuestas.
@@ -709,7 +719,7 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
 
     $apuesta_fija[] = [
       'titulo'     => "Primitiva Semanal",
-      'subtitulo'  => "Jueves y Sábado",
+      'subtitulo'  => $fecha_juesab_lit,
       'color'      => "success",
       'fechas'     => $fecha_juesab,
       'imagen'     => "b_primitiva.png",
