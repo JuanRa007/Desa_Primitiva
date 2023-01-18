@@ -701,7 +701,7 @@ function prepara_primtiva_vari($fecha, $numvari, $numvarir, $numvari1, $numvari1
     // Buscar el jueves y sábado de la fecha indicada, o lunes, jueves y sábado.
     if ($primivaritresdias) {
       $fecha_juesab = obtener_fecha_sorteo("lunsab", $fecha);
-      $fecha_juesab_lit = "Lunes, Martes y Sábado";
+      $fecha_juesab_lit = "Lunes, Jueves y Sábado";
     } else {
       $fecha_juesab = obtener_fecha_sorteo("juesab", $fecha);
       $fecha_juesab_lit = "Jueves y Sábado";
