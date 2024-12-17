@@ -78,6 +78,11 @@ if (!$app_prod) {
 
       <!-- ======= INICIO ======= -->
       <?php
+
+      /*       echo '<pre>';
+      var_dump($datos_apuestas);
+      echo '</pre>'; */
+
       foreach ($datos_apuestas as $tipo_apuesta => $mi_apuesta) {
         $apuesta = $mi_apuesta[0];
         // Los avisos no se procesan.
