@@ -206,7 +206,11 @@ function genera_texto_fecha($array_fecha, $tipo_apuesta = "")
   $indicador = false;
 
   // Cuántas fechas nos llegan
-  $tot_fechas = sizeof($array_fecha);
+  if ($tipo_apuesta != 'lotnavidad') {
+    $tot_fechas = sizeof($array_fecha);
+  } else {
+    $tot_fechas = 1;
+  }
 
   // Si es una apuesta especial, la fecha es de un día a otro.
   if ($tipo_apuesta == 'bonoloto') {
@@ -251,7 +255,7 @@ function genera_texto_importe($premio)
 
 
 // Obtenie los valores para las fechas del euromillon.
-function obtener_valor_marvie($marvie, &$subtitul)
+function obtener_valor_marvie($marvie, $subtitul = null)
 {
 
   $tipo_fecha = "";
@@ -496,7 +500,7 @@ function obtener_premio_dia($registro_dia)
 }
 
 // Busca la existencia de un índice "Aviso" entre las apuestas del día.
-function buscar_aviso_apuesta($apuestas_dia, &$titulo_aviso, &$mensa_aviso)
+function buscar_aviso_apuesta($apuestas_dia, $titulo_aviso = null, $mensa_aviso = null)
 {
 
   // Inicializamos los datos a devolver.
@@ -1047,6 +1051,8 @@ function prepara_bloque_otros($fecha_reg, $otros)
 
   // Incializar variable a devolver.
   $apuesta_otros = [];
+  $otro_euroruno = null;
+  $otro_eurordos = null;
   // Separador.
   $text_separador = "--------";
 
@@ -1194,6 +1200,23 @@ function prepara_bloque_otros($fecha_reg, $otros)
         $strmirar = "";
       }   // PrimitivaE
 
+      // Buscamos PrimitivaT.
+      //=======================
+      $pos1 = stripos($strmirar, "PrimitivaT");
+      if ($pos1 !== false) {
+
+        // Inicializamos.
+        $mi_apuesta = [];
+
+        // Obtenemos los datos de la apuesta.
+        $mi_apuesta = prepara_otros_primitiva($strmirar, $fecha_reg);
+        if ($mi_apuesta) {
+          $apuesta_otros['primitivat'] = $mi_apuesta;
+        }
+
+        // Limpiamos la cadena de trabajo.
+        $strmirar = "";
+      }   // PrimitivaT
 
       // Buscamos Desconocido
       //=======================
