@@ -38,6 +38,8 @@ $saldos_part = obtener_saldos();
 
                 $participante = $usuario[0];
                 $saldo = number_format(sprintf("%01.2f", $usuario[1]), 2, ',', '.');
+                // 20241230--> Nuevo control de saldo mínimo.
+                $saldo_flo = $usuario[1];
                 $fecha = convierte_fecha($usuario[2]);
 
                 $clase = "";
@@ -51,7 +53,8 @@ $saldos_part = obtener_saldos();
                 }
 
                 $clase_celda = "";
-                if ($saldo <= $app_saldominimo) {
+                // 20241230--> Nuevo control de saldo mínimo.
+                if ($saldo_flo <= $app_saldominimo) {
                   $clase_celda = "table-danger";
                 }
 
